@@ -12,10 +12,11 @@ def index():
 def runled():
     if app.ledproc is None:
         app.ledproc = subprocess.Popen(["python", "/home/kherhozen/sources/Navio/Python/myi2c.py"])
-        return 'led demo run'
+        return 1
     else:
         app.ledproc.terminate()
-        return 'led demo stop'
+        app.ledproc = None
+        return 0
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')

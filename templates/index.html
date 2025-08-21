@@ -12,8 +12,8 @@
     <button id="actionButton" onclick="runLed()" class="styled-button">
         Start LED demo
     </button>
-    <br>
-    <div id="output">
+
+    <div id="output" class="label">
         ...
     </div>
 
@@ -22,10 +22,11 @@
           var xhttp = new XMLHttpRequest();
           xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
-                document.getElementById("output").innerHTML = this.responseText;
-                if (this.responseText == "led demo run") {
+                if (this.responseText == "1") {
+                  document.getElementById("output").innerHTML = "demo is running";
                   document.getElementById("actionButton").innerHTML = "Stop LED demo";
                 } else {
+                  document.getElementById("output").innerHTML = "...";
                   document.getElementById("actionButton").innerHTML = "Start LED demo";
                 }
             }
