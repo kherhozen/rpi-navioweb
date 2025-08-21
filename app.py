@@ -9,7 +9,7 @@ def index():
 
 @app.route('/runled')
 def runled():
-    subprocess.run(["python", "~/sources/Navio/Python/myi2c.py"])
+    subprocess.run(["python", "sources/Navio/Python/myi2c.py"])
     return 'Yummy cakes!'
 
 if __name__ == '__main__':
