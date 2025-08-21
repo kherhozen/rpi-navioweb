@@ -1,8 +1,25 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<link rel="stylesheet" href="/static/style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blue Button and Script</title>
+    <link rel="stylesheet" href="../static/style.css">
 </head>
 <body>
-<h1>My website</h1>
+
+    <!-- Main Button -->
+    <button id="actionButton" onclick="runScript()" class="styled-button">
+        Click me to run the script
+    </button>
+
+    <script>
+        function runScript() {
+          var xhttp = new XMLHttpRequest();
+          xhttp.open("GET", "runled", true);
+          xhttp.send();
+        }
+    </script>
+
 </body>
 </html>
