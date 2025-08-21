@@ -9,21 +9,25 @@
 <body>
 
     <!-- Main Button -->
-    <button id="actionButton" onclick="runScript()" class="styled-button">
-        Click me to run the script
+    <button id="actionButton" onclick="runLed()" class="styled-button">
+        Start LED demo
     </button>
-
+    <br>
     <div id="output">
         ...
     </div>
 
     <script>
-        function runScript() {
+        function runLed() {
           var xhttp = new XMLHttpRequest();
           xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
-                document.getElementById("output").innerHTML =
-                this.responseText;
+                document.getElementById("output").innerHTML = this.responseText;
+                if (this.responseText == "led demo run") {
+                  document.getElementById("actionButton").innerHTML = "Stop LED demo";
+                } else {
+                  document.getElementById("actionButton").innerHTML = "Start LED demo";
+                }
             }
           };
           xhttp.open("GET", "runled", true);

@@ -2,6 +2,7 @@ from flask import Flask, render_template
 import subprocess
 
 app = Flask(__name__)
+app.ledproc = None
 
 @app.route('/')
 def index():
@@ -9,8 +10,12 @@ def index():
 
 @app.route('/runled')
 def runled():
-    subprocess.run(["python", "sources/Navio/Python/myi2c.py"])
-    return 'led demo done'
+    if app.ledproc is None:
+        app.ledproc = subprocess.Popen(["python", "/home/kherhozen/sources/Navio/Python/myi2c.py"])
+        return 'led demo run'
+    else:
+        app.ledproc.terminate()
+        return 'led demo stop'
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
