@@ -20,7 +20,7 @@ def runled():
 
 @app.route('/confled')
 def confled():
-    with open('/home/kherhozen/sources/Navio/Python/confled', 'w') as f:
+    with open('/home/kherhozen/sources/Navio/Python/conf_led', 'w') as f:
         f.write("2,0,1,0.6")
     return "1"
 
