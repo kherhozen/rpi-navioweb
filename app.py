@@ -18,5 +18,11 @@ def runled():
         app.ledproc = None
         return "0"
 
+@app.route('/confled')
+def confled():
+    with open('/home/kherhozen/sources/Navio/Python/confled', 'w') as f:
+        f.write("2,0,1,0.6")
+    return "1"
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')

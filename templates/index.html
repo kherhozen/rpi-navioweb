@@ -9,8 +9,11 @@
 <body>
 
     <!-- Main Button -->
-    <button id="actionButton" onclick="runLed()" class="styled-button">
+    <button id="startButton" onclick="runLed()" class="styled-button">
         Start LED demo
+    </button>
+    <button id="confButton" onclick="confLed()" class="styled-button">
+        Conf LED
     </button>
 
     <div id="output" class="label">
@@ -18,22 +21,38 @@
     </div>
 
     <script>
-        function runLed() {
-          var xhttp = new XMLHttpRequest();
-          xhttp.onreadystatechange = function() {
+    function runLed() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
                 if (this.responseText == "1") {
-                  document.getElementById("output").innerHTML = "demo is running";
-                  document.getElementById("actionButton").innerHTML = "Stop LED demo";
+                    document.getElementById("output").innerHTML = "demo is running";
+                    document.getElementById("startButton").innerHTML = "Stop LED demo";
                 } else {
-                  document.getElementById("output").innerHTML = "...";
-                  document.getElementById("actionButton").innerHTML = "Start LED demo";
+                    document.getElementById("output").innerHTML = "...";
+                    document.getElementById("startButton").innerHTML = "Start LED demo";
                 }
             }
-          };
-          xhttp.open("GET", "runled", true);
-          xhttp.send();
-        }
+        };
+        xhttp.open("GET", "runled", true);
+        xhttp.send();
+    }
+
+    function confLed() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                if (this.responseText == "1") {
+                    document.getElementById("output").innerHTML = "conf updated";
+                } else {
+                    document.getElementById("output").innerHTML = "...";
+                }
+            }
+        };
+        xhttp.open("GET", "confled", true);
+        xhttp.send();
+    }
+
     </script>
 
 </body>
