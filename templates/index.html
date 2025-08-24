@@ -21,6 +21,29 @@
     </div>
 
     <script>
+    function sendJsonToServer(dataObject) {
+        const serverUrl = '192.168.1.23:5000';
+        const requestBody = JSON.stringify(dataObject);
+        const requestOptions = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: requestBody
+        };
+        fetch(serverUrl, requestOptions)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Server response:', data);
+            })
+            .catch(error => {
+                console.error('There was an error sending the data:', error);
+            });
+    }
+
     function runLed() {
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
@@ -39,20 +62,14 @@
     }
 
     function confLed() {
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                if (this.responseText == "1") {
-                    document.getElementById("output").innerHTML = "conf updated";
-                } else {
-                    document.getElementById("output").innerHTML = "...";
-                }
-            }
+        const myConf = {
+            "mode": 2,
+            "red": 0.3,
+            "green": 0,
+            "blue": 1
         };
-        xhttp.open("GET", "confled", true);
-        xhttp.send();
+        sendJsonToServer(myConf);
     }
-
     </script>
 
 </body>

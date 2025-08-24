@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, jsonify
 import subprocess
 
 app = Flask(__name__)
@@ -18,11 +18,18 @@ def runled():
         app.ledproc = None
         return "0"
 
-@app.route('/confled')
+@app.route('/confled', methods=['POST'])
 def confled():
-    with open('/home/kherhozen/sources/Navio/Python/conf_led', 'w') as f:
-        f.write("2,0,1,0.6")
-    return "1"
+    if request.is_json:
+        received_data = request.get_json()
+        with open('/home/kherhozen/sources/Navio/Python/conf_led', 'w') as f:
+            f.write("{},{},{},{}".format(received_data.get('mode'), received_data.get('red'),
+                                         received_data.get('green'), received_data.get('blue')))
+            return jsonify({
+                "message": "Data received successfully!"
+            })
+    else:
+        return jsonify({"error": "Request body must be JSON"}), 400
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
