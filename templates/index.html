@@ -13,16 +13,21 @@
         Start LED demo
     </button>
     <div>
-        <input type="range" id="red" name="red" min="0" max="1" />
+        <input type="radio" id="off" name="mode" value="0" onchange="confLed()">
+        <label for="off">OFF</label>
+        <input type="radio" id="on" name="mode" value="1" onchange="confLed()">
+        <label for="on">ON</label>
+        <input type="radio" id="pulse" name="mode" value="2" onchange="confLed()">
+        <label for="pulse">Pulse</label>
+    </div>
+    <div>
+        <input type="range" id="red" name="red" min="0" max="1" step="0.01" onchange="confLed()">
         <label for="red">Red</label>
-        <input type="range" id="green" name="green" min="0" max="1" />
+        <input type="range" id="green" name="green" min="0" max="1" step="0.01" onchange="confLed()">
         <label for="green">Green</label>
-        <input type="range" id="blue" name="blue" min="0" max="1" />
+        <input type="range" id="blue" name="blue" min="0" max="1" step="0.01" onchange="confLed()">
         <label for="blue">Blue</label>
     </div>
-    <button id="confButton" onclick="confLed()" class="styled-button">
-        Conf LED
-    </button>
 
     <div id="output" class="label">
         ...
@@ -70,10 +75,10 @@
 
     function confLed() {
         const myConf = {
-            "mode": 2,
-            "red": 0.3,
-            "green": 0,
-            "blue": 1
+            "mode": document.getElementById("mode"),
+            "red": document.getElementById("red"),
+            "green": document.getElementById("green"),
+            "blue": document.getElementById("blue")
         };
         sendJsonToServer("confled", myConf);
     }
