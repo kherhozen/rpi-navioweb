@@ -21,8 +21,7 @@
     </div>
 
     <script>
-    function sendJsonToServer(dataObject) {
-        const serverUrl = '192.168.1.23:5000';
+    function sendJsonToServer(serverUrl, dataObject) {
         const requestBody = JSON.stringify(dataObject);
         const requestOptions = {
             method: 'POST',
@@ -68,7 +67,7 @@
             "green": 0,
             "blue": 1
         };
-        sendJsonToServer(myConf);
+        sendJsonToServer("confled", myConf);
     }
     </script>
 
