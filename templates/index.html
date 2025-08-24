@@ -75,7 +75,7 @@
 
     function confLed() {
         const myConf = {
-            "mode": document.getElementByName("mode").value,
+            "mode": document.querySelector("input[name=mode]:checked").value,
             "red": document.getElementById("red").value,
             "green": document.getElementById("green").value,
             "blue": document.getElementById("blue").value
