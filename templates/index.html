@@ -49,8 +49,7 @@
                 return response.json();
             })
             .then(data => {
-                console.log(data.message);
-                return data.message
+                document.getElementById("output").innerHTML = data.message;
             })
             .catch(error => {
                 console.error('There was an error sending the data:', error);
@@ -79,7 +78,7 @@
             "green": document.getElementById("green").value,
             "blue": document.getElementById("blue").value
         };
-        document.getElementById("output").innerHTML = sendJsonToServer("confled", myConf);
+        sendJsonToServer("confled", myConf);
     }
     </script>
 
