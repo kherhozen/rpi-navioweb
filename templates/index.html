@@ -61,10 +61,8 @@
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
                 if (this.responseText == "1") {
-                    document.getElementById("output").innerHTML = "demo is running";
                     document.getElementById("startButton").innerHTML = "Stop LED demo";
                 } else {
-                    document.getElementById("output").innerHTML = "...";
                     document.getElementById("startButton").innerHTML = "Start LED demo";
                 }
             }
@@ -80,7 +78,7 @@
             "green": document.getElementById("green").value,
             "blue": document.getElementById("blue").value
         };
-        sendJsonToServer("confled", myConf);
+        document.getElementById("output").innerHTML = sendJsonToServer("confled", myConf);
     }
     </script>
 
