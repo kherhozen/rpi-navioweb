@@ -1,24 +1,27 @@
 import time
 
 from flask import Flask, render_template, request, jsonify
-import navio.led
+import navio.led as navio_led
+import threading
 
 app = Flask(__name__)
-app.ledproc = None
+app.led_thread = threading.Thread(target=navio_led.main)
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
-@app.route('/runled')
+@app.route('/runled', methods=['POST'])
 def runled():
-    if app.ledproc is None:
-        app.ledproc = subprocess.Popen(["python", "/home/kherhozen/sources/Navio/Python/myi2c.py"])
-        return "1"
+    if request.is_json:
+        if not app.led_thread.is_alive():
+            app.led_thread.start()
+            return jsonify({"message": "LED Start"})
+        else:
+            navio_led.stop()
+            return jsonify({"message": "LED Stop"})
     else:
-        app.ledproc.terminate()
-        app.ledproc = None
-        return "0"
+        return jsonify({"error": "Request body must be JSON"}), 400
 
 @app.route('/confled', methods=['POST'])
 def confled():
