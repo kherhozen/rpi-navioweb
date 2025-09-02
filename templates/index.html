@@ -34,12 +34,11 @@
     </div>
 
     <script>
-    function sendJsonToServer(serverUrl, dataObject) {
-        const requestBody = JSON.stringify(dataObject);
+    function sendJsonToServer(serverUrl, dataObject="") {
         const requestOptions = {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: requestBody
+            body: JSON.stringify(dataObject)
         };
         fetch(serverUrl, requestOptions)
             .then(response => {
@@ -57,20 +56,9 @@
     }
 
     function runLed() {
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                if (this.responseText == "1") {
-                    document.getElementById("startButton").innerHTML = "Stop LED demo";
-                } else {
-                    document.getElementById("startButton").innerHTML = "Start LED demo";
-                }
-            }
-        };
-        xhttp.open("GET", "runled", true);
-        xhttp.send();
+        sendJsonToServer("runled");
     }
-
+        
     function confLed() {
         const myConf = {
             "mode": document.querySelector("input[name=mode]:checked").value,
