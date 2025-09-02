@@ -79,8 +79,7 @@ def signal_handler(signum, frame):
     with open('/home/kherhozen/sources/Navio/Python/conf_led', 'w') as f:
         f.write("0,0,0,0")
 
-
-if __name__ == '__main__':
+def main():
     signal(SIGTERM, signal_handler)
     signal(SIGINT, signal_handler)
     pwm = NavioPWM()
@@ -124,3 +123,6 @@ if __name__ == '__main__':
         time.sleep(0.025)
     led.off()
     pwm.shutdown()
+
+if __name__ == '__main__':
+    main()
