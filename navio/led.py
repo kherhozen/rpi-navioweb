@@ -75,9 +75,12 @@ class NavioPWM:
 class NavioLED:
             self.pulse_thread.start()
 
-def signal_handler(signum, frame):
+def stop():
     with open('/home/kherhozen/sources/Navio/Python/conf_led', 'w') as f:
         f.write("0,0,0,0")
+
+def signal_handler(signum, frame):
+    stop()
 
 def main():
     signal(SIGTERM, signal_handler)
