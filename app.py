@@ -1,7 +1,7 @@
 import time
 
 from flask import Flask, render_template, request, jsonify
-import subprocess
+import navio.led
 
 app = Flask(__name__)
 app.ledproc = None
