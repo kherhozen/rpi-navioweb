@@ -95,7 +95,7 @@ class NavioLEDManager:
 
     def __init__(self):
         self.led = NavioLED()
-        self.run = True
+        self.run = False
         self.t_update = None
         self.mode = 2
         self.rgb = self.led.GREEN
@@ -141,6 +141,7 @@ class NavioLEDManager:
 
     def start(self):
         if not self.t_update:
+            self.run = True
             self.t_update = threading.Thread(target=self.__update)
             self.t_update.start()
 
