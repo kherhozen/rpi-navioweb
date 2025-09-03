@@ -27,11 +27,11 @@ def runled():
 def confled():
     if request.is_json:
         received_data = request.get_json()
-        with open('/home/kherhozen/sources/Navio/Python/conf_led', 'w') as f:
+        with open(navio_led.NavioLED.CONF_LED_PATH, 'w') as f:
             f.write("{},{},{},{}".format(received_data.get('mode'), received_data.get('red'),
                                          received_data.get('green'), received_data.get('blue')))
         time.sleep(0.1)
-        with open('/home/kherhozen/sources/Navio/Python/conf_led_status', 'r') as f:
+        with open(navio_led.NavioLED.CONF_LED_STATUS_PATH, 'r') as f:
             return jsonify({
                 "message": f.read()
             })
