@@ -101,11 +101,11 @@ class NavioLEDManager:
         self.rgb = self.led.GREEN
         with open(self.CONF_LED_PATH, 'w+') as f:
             f.write("{},{},{},{}".format(self.mode, *self.rgb))
+        print("hello")
 
     def load_conf(self):
         with open(self.CONF_LED_PATH, 'r') as f:
             conf_led = f.read().split(',')
-            print(conf_led)
         try:
             mode = int(conf_led[0])
             rgb = tuple(map(float, conf_led[1:4]))
