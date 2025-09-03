@@ -20,7 +20,7 @@ class NavioLED:
         self.color = color
         self.saturation = saturation
         self.run = True
-        self.t_update = threading.Thread(target=self.__update)
+        self.t_update = None
         self.pulse_run = False
         self.t_pulse = None
 
@@ -157,7 +157,6 @@ class NavioLEDManager:
             self.t_update.start()
 
     def shutdown(self):
-        print("goodbye")
         self.run = False
         if self.t_update:
             self.run = False
