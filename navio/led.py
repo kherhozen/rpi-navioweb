@@ -113,7 +113,6 @@ class NavioLEDManager:
         except ValueError:
             pass
         else:
-            print(rgb)
             self.led.set_color(rgb)
             if mode == 1:
                 self.led.off()
