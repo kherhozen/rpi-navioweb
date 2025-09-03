@@ -105,13 +105,13 @@ class NavioLEDManager:
     def load_conf(self):
         with open(self.CONF_LED_PATH, 'r') as f:
             conf_led = f.read().split(',')
+            print(conf_led)
         try:
             mode = int(conf_led[0])
             rgb = tuple(map(float, conf_led[1:4]))
         except ValueError:
             pass
         else:
-            print(mode, rgb)
             self.led.set_color(rgb)
             if mode == 1:
                 self.led.off()
