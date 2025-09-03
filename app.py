@@ -14,9 +14,11 @@ def runled():
     if request.is_json:
         if not app.runled:
             app.led.start()
+            app.runled = True
             return jsonify({"message": "LED Start"})
         else:
             app.led.shutdown()
+            app.runled = False
             return jsonify({"message": "LED Stop"})
     else:
         return jsonify({"error": "Request body must be JSON"}), 400
