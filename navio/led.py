@@ -1,6 +1,5 @@
 import smbus
 import time
-from signal import signal, SIGTERM, SIGINT
 from gpiozero import LED
 import threading
 
@@ -155,12 +154,7 @@ def stop():
     with open(NavioLED.CONF_LED_PATH, 'w') as f:
         f.write("0,0,0,0")
 
-def signal_handler(signum, frame):
-    stop()
-
 def main():
-    signal(SIGTERM, signal_handler)
-    signal(SIGINT, signal_handler)
     pwm = NavioPWM()
     pwm.start()
     led = NavioLED(pwm)
