@@ -5,7 +5,7 @@ import navio.led as navio_led
 import threading
 
 app = Flask(__name__)
-app.led_thread = threading.Thread(target=navio_led.main)
+app.led_thread = None
 
 @app.route('/')
 def index():
@@ -14,11 +14,13 @@ def index():
 @app.route('/runled', methods=['POST'])
 def runled():
     if request.is_json:
-        if not app.led_thread.is_alive():
+        if not app.led_thread:
+            app.led_thread = threading.Thread(target=navio_led.main)
             app.led_thread.start()
             return jsonify({"message": "LED Start"})
         else:
             navio_led.stop()
+            app.led_thread = None
             return jsonify({"message": "LED Stop"})
     else:
         return jsonify({"error": "Request body must be JSON"}), 400
