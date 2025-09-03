@@ -29,7 +29,7 @@ class NavioLED:
 
     def __update(self):
         while self.run:
-            print(self.color, self.saturation)
+            print(self.t_update, self.color, self.saturation)
             self.pwm.set_pwm(self.R_CHANNEL, 1 - self.color[0] * self.saturation)
             self.pwm.set_pwm(self.G_CHANNEL, 1 - self.color[1] * self.saturation)
             self.pwm.set_pwm(self.B_CHANNEL, 1 - self.color[2] * self.saturation)
