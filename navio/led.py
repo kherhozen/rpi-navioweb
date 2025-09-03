@@ -1,6 +1,6 @@
 import time
 import threading
-import pwm as navio_pwm
+import navio.pwm as navio_pwm
 
 class NavioLED:
 
