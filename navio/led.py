@@ -111,6 +111,7 @@ class NavioLEDManager:
         except ValueError:
             pass
         else:
+            print("hello1")
             self.led.set_color(rgb)
             if mode == 1:
                 self.led.off()
@@ -140,14 +141,13 @@ class NavioLEDManager:
             time.sleep(0.025)
 
     def start(self):
-        print("hello1")
         if not self.t_update:
             self.run = True
             self.t_update = threading.Thread(target=self.__update)
             self.t_update.start()
 
     def shutdown(self):
-        print("hello2")
+        print("goodbye")
         self.run = False
         if self.t_update:
             self.run = False
