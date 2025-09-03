@@ -1,11 +1,8 @@
-import time
-
 from flask import Flask, render_template, request, jsonify
 import navio.led as navio_led
-import threading
 
 app = Flask(__name__)
-app.led_thread = None
+app.led = navio_led.NavioLEDManager()
 
 @app.route('/')
 def index():
@@ -14,13 +11,11 @@ def index():
 @app.route('/runled', methods=['POST'])
 def runled():
     if request.is_json:
-        if not app.led_thread:
-            app.led_thread = threading.Thread(target=navio_led.main)
-            app.led_thread.start()
+        if not app.led:
+            app.led.start()
             return jsonify({"message": "LED Start"})
         else:
-            navio_led.stop()
-            app.led_thread = None
+            app.led.shutdown()
             return jsonify({"message": "LED Stop"})
     else:
         return jsonify({"error": "Request body must be JSON"}), 400
@@ -29,14 +24,12 @@ def runled():
 def confled():
     if request.is_json:
         received_data = request.get_json()
-        with open(navio_led.NavioLED.CONF_LED_PATH, 'w') as f:
-            f.write("{},{},{},{}".format(received_data.get('mode'), received_data.get('red'),
-                                         received_data.get('green'), received_data.get('blue')))
-        time.sleep(0.1)
-        with open(navio_led.NavioLED.CONF_LED_PATH, 'r') as f:
-            return jsonify({
-                "message": f.read()
-            })
+        app.led.write_conf(received_data.get('mode'),
+                           (received_data.get('red'), received_data.get('green'), received_data.get('blue'))
+                           )
+        return jsonify({
+            "message": "Conf updated"
+        })
     else:
         return jsonify({"error": "Request body must be JSON"}), 400
 
