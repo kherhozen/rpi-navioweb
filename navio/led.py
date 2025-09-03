@@ -29,7 +29,6 @@ class NavioLED:
 
     def __update(self):
         while self.run:
-            print(self.t_update, self.color, self.saturation)
             self.pwm.set_pwm(self.R_CHANNEL, 1 - self.color[0] * self.saturation)
             self.pwm.set_pwm(self.G_CHANNEL, 1 - self.color[1] * self.saturation)
             self.pwm.set_pwm(self.B_CHANNEL, 1 - self.color[2] * self.saturation)
@@ -84,9 +83,18 @@ class NavioLED:
             self.t_pulse = threading.Thread(target=self.__pulse_manager)
             self.t_pulse.start()
 
+    def start(self):
+        if not self.t_update:
+            self.run = True
+            self.t_update = threading.Thread(target=self.__update)
+            self.t_update.start()
+
     def shutdown(self):
         self.off()
-        self.run = False
+        if self.t_update:
+            self.run = False
+            self.t_update.join()
+            self.t_update = None
         self.pwm.shutdown()
 
 
@@ -143,6 +151,7 @@ class NavioLEDManager:
 
     def start(self):
         if not self.t_update:
+            self.led.start()
             self.run = True
             self.t_update = threading.Thread(target=self.__update)
             self.t_update.start()
