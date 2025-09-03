@@ -3,6 +3,7 @@ import navio.led as navio_led
 
 app = Flask(__name__)
 app.led = navio_led.NavioLEDManager()
+app.runled = False
 
 @app.route('/')
 def index():
@@ -11,7 +12,7 @@ def index():
 @app.route('/runled', methods=['POST'])
 def runled():
     if request.is_json:
-        if not app.led:
+        if not app.runled:
             app.led.start()
             return jsonify({"message": "LED Start"})
         else:

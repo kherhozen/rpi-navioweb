@@ -101,7 +101,6 @@ class NavioLEDManager:
         self.rgb = self.led.GREEN
         with open(self.CONF_LED_PATH, 'w+') as f:
             f.write("{},{},{},{}".format(self.mode, *self.rgb))
-        print("hello")
 
     def load_conf(self):
         with open(self.CONF_LED_PATH, 'r') as f:
@@ -141,12 +140,14 @@ class NavioLEDManager:
             time.sleep(0.025)
 
     def start(self):
+        print("hello1")
         if not self.t_update:
             self.run = True
             self.t_update = threading.Thread(target=self.__update)
             self.t_update.start()
 
     def shutdown(self):
+        print("hello2")
         self.run = False
         if self.t_update:
             self.run = False
