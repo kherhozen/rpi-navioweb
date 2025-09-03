@@ -33,7 +33,19 @@
         ...
     </div>
 
+    <h1>Logs du serveur</h1>
+    <div id="log-container"></div>
+
     <script>
+    var source = new EventSource("/events");
+    var logContainer = document.getElementById("log-container");
+
+    source.onmessage = function(event) {
+        var p = document.createElement("p");
+        p.textContent = event.data;
+        logContainer.appendChild(p);
+    };
+
     function sendJsonToServer(serverUrl, dataObject="") {
         const requestOptions = {
             method: 'POST',

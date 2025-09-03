@@ -1,9 +1,21 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, Response
 import navio.led as navio_led
+import time
 
 app = Flask(__name__)
 app.led = navio_led.NavioLEDManager()
 app.runled = False
+
+def generate_events():
+    for i in range(10):
+        data = f"data: Ceci est la ligne {i+1} envoyée à {time.ctime()}\n\n"
+        yield data
+        time.sleep(1)
+
+@app.route('/events')
+def events():
+    return Response(generate_events(), mimetype="text/event-stream")
+
 
 @app.route('/')
 def index():
