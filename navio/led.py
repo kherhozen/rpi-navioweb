@@ -90,8 +90,8 @@ class NavioLED:
 
 class NavioLEDManager:
 
-    CONF_LED_PATH = "/tmp/rpi-navioweb/conf_led"
-    CONF_LED_STATUS_PATH = "/tmp/rpi-navioweb/conf_led_status"
+    CONF_LED_PATH = "/tmp/rpi-navioweb_conf_led"
+    CONF_LED_STATUS_PATH = "/tmp/rpi-navioweb_conf_led_status"
 
     def __init__(self):
         self.led = NavioLED()
