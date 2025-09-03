@@ -99,7 +99,7 @@ class NavioLEDManager:
         self.t_update = None
         self.mode = 2
         self.rgb = self.led.GREEN
-        with open(self.CONF_LED_PATH, 'w') as f:
+        with open(self.CONF_LED_PATH, 'w+') as f:
             f.write("{},{},{},{}".format(self.mode, *self.rgb))
 
     def load_conf(self):
@@ -125,7 +125,7 @@ class NavioLEDManager:
                 self.run = False
                 status = "sleep"
             if mode != self.mode or rgb != self.rgb:
-                with open(self.CONF_LED_STATUS_PATH, 'w') as fout:
+                with open(self.CONF_LED_STATUS_PATH, 'w+') as fout:
                     fout.write(status)
                 self.mode = mode
                 self.rgb = rgb
