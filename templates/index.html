@@ -38,10 +38,9 @@
 
     <script>
     var source = new EventSource("/events");
-    var logContainer = document.getElementById("log-container");
 
     source.onmessage = function(event) {
-        document.getElementById("log-container").innerHTML = event.data;
+        document.getElementById("baro-container").innerHTML = event.data;
     };
 
     function sendJsonToServer(serverUrl, dataObject="") {
