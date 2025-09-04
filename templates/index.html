@@ -34,13 +34,12 @@
     </div>
 
     <h1>Barometer</h1>
-    <div id="baro-container"></div>
+    <div id="baro-container">...</div>
 
     <script>
     var source = new EventSource("/events");
-    source.onmessage = (event) => {
-        console.log(event.data)
-        document.getElementById("baro-container").textContent = event.data;
+    source.onmessage = function(event) {
+        document.getElementById("baro-container").innerHTML = event.data;
     };
 
     function sendJsonToServer(serverUrl, dataObject="") {
