@@ -1,16 +1,18 @@
 from flask import Flask, render_template, request, jsonify, Response
 import navio.led as navio_led
+import navio.barometer as navio_baro
 import time
 
 app = Flask(__name__)
 app.led = navio_led.NavioLEDManager()
 app.runled = False
+app.baro = navio_baro.BarometerManager()
+app.baro.start()
 
 def generate_events():
-    for i in range(10):
-        data = f"data: Ceci est la ligne {i+1} envoyée à {time.ctime()}\n\n"
-        yield data
-        time.sleep(1)
+    yield app.baro.get_data_str()
+    time.sleep(2)
+
 
 @app.route('/events')
 def events():

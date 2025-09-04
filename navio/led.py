@@ -157,7 +157,6 @@ class NavioLEDManager:
     def shutdown(self):
         self.run = False
         if self.t_update:
-            self.run = False
             self.t_update.join()
             self.t_update = None
         self.led.shutdown()
