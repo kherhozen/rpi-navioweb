@@ -38,8 +38,7 @@
 
     <script>
     var source = new EventSource("/events");
-
-    source.onmessage = function(event) {
+    source.onmessage = (event) => {
         document.getElementById("baro-container").innerHTML = event.data;
     };
 
