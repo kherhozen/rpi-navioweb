@@ -142,7 +142,7 @@ class BarometerManager:
     def __update(self):
         while self.run:
             self.baro.update()
-            time.sleep(1)
+            time.sleep(0.2)
 
     def get_data_str(self):
         return f"OAT: {self.baro.get_temperature():.1f}degC - Ps: {self.baro.get_pressure():.0f}mb"
