@@ -10,7 +10,7 @@ app.baro = navio_baro.BarometerManager()
 app.baro.start()
 
 def generate_events():
-    yield app.baro.get_data_str()
+    yield app.baro.get_data_str() + "\n\n"
     time.sleep(2)
 
 
