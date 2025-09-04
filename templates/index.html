@@ -39,7 +39,7 @@
     <script>
     var source = new EventSource("/events");
     source.onmessage = (event) => {
-        document.getElementById("baro-container").innerHTML = event.data;
+        document.getElementById("baro-container").textContent = event.data;
     };
 
     function sendJsonToServer(serverUrl, dataObject="") {
