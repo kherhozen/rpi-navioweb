@@ -178,7 +178,7 @@
             isRunning = true;
             eventSource = new EventSource('/events');
             eventSource.onmessage = function(event) {
-                if (event.data.startsWith("pressure") {
+                if (event.data.startsWith("pressure")) {
                     const value = parseFloat(event.data.split('=')[1];
                     if (!isNaN(value)) {
                         pressureDataPoints.push(value);
@@ -188,7 +188,7 @@
                     } else {
                         console.error('Donnée reçue non valide:', event.data);
                     }
-                } else if (event.data.startsWith("temperature") {
+                } else if (event.data.startsWith("temperature")) {
                     const value = parseFloat(event.data.split('=')[1];
                     if (!isNaN(value)) {
                         temperatureDataPoints.push(value);
