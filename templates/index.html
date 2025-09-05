@@ -175,7 +175,7 @@
                     dataPoints[1].push(values.pressure);
                     dataPoints[2].push(values.temperature);
                     while (dataPoints[0].length > 1) {
-                        if (dataPoints[0][dataPoints[0].length-1] - dataPoints[0][0] > tRange*2) {
+                        if (dataPoints[0][dataPoints[0].length-2] - dataPoints[0][0] > tRange) {
                             dataPoints[0].shift();
                             dataPoints[1].shift();
                             dataPoints[2].shift();
