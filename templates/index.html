@@ -168,15 +168,13 @@
             eventSource.onmessage = function(event) {
                 try {
                     const values = JSON.parse(event.data);
-                    if (Array.isArray(values) && values.length === 3 && values.every(val => typeof val === 'number')) {
-                        values.forEach((value, index) => {
-                            dataPoints[index].push(value);
-                            if (dataPoints[index].length > maxPoints) {
-                                dataPoints[index].shift(); // Supprime le point le plus ancien
-                            }
-                        });
-                    } else {
-                        console.error('Donnée reçue non valide (format attendu: un tableau de 3 nombres):', event.data);
+                    dataPoints[0].push(values.time);
+                    dataPoints[1].push(values.pressure);
+                    dataPoints[2].push(values.temperature);
+                    if (dataPoints[0].length > maxPoints) {
+                        dataPoints[0].shift();
+                        dataPoints[1].shift();
+                        dataPoints[2].shift();
                     }
                 } catch (e) {
                     console.error('Erreur lors de l\'analyse des données JSON:', e);
