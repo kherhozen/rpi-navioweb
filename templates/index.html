@@ -143,6 +143,7 @@
     function drawGraph() {
         drawGrid();
         drawLabels();
+        ctx.font = '14px Arial'; // Police et taille du texte
 
         dataPoints.forEach((line, lineIndex) => {
             if (lineIndex > 0) {
@@ -165,6 +166,8 @@
                         ctx.lineTo(x, y);
                     }
                     ctx.stroke();
+                    ctx.fillStyle = colors[lineIndex-1];
+                    ctx.fillText(String.format("%.1f", line[line.length-1]), width-50, 15+20*(lineIndex-1));
                 }
             }
         });
