@@ -11,7 +11,7 @@ app.baro.start()
 
 def generate_events():
     while True:
-        yield f"data: {app.baro.get_data_str()}\n\n"
+        yield f"data: {time.ctime()}: {app.baro.get_data_str()}\n\n"
         time.sleep(0.5)
 
 @app.route('/events')
