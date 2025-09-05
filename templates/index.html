@@ -167,7 +167,7 @@
                     }
                     ctx.stroke();
                     ctx.fillStyle = colors[lineIndex-1];
-                    ctx.fillText(String.format("%.1f", line[line.length-1]), width-50, 15+20*(lineIndex-1));
+                    ctx.fillText('${line[line.length-1].toFixed(1)}', width-50, 15+20*(lineIndex-1));
                 }
             }
         });
