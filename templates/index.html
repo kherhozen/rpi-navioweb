@@ -37,6 +37,15 @@
     <h1>Barometer</h1>
     <div id="baro-container">...</div>
 
+    <div id="oscilloscope-container">
+        <canvas id="oscilloscope" width="400" height="200"></canvas>
+    </div>
+
+    <div class="controls">
+        <button onclick="startOscilloscope()">Démarrer</button>
+        <button onclick="stopOscilloscope()">Arrêter</button>
+    </div>
+
     <script>
     var source = new EventSource("/events");
     source.onmessage = function(event) {
@@ -77,6 +86,105 @@
         };
         sendJsonToServer("confled", myConf);
     }
+
+    const canvas = document.getElementById('oscilloscope');
+    const ctx = canvas.getContext('2d');
+    const width = canvas.width;
+    const height = canvas.height;
+
+    let dataPoints = [];
+    let isRunning = false;
+    let animationFrameId = null;
+
+    const maxPoints = 200; // Nombre de points affichés à la fois
+
+    // Fonction pour dessiner la grille (facultatif)
+    function drawGrid() {
+        const gridColor = '#333';
+        const numLinesX = 20;
+        const numLinesY = 10;
+
+        ctx.clearRect(0, 0, width, height);
+        ctx.strokeStyle = gridColor;
+
+        // Lignes verticales
+        for (let i = 0; i <= numLinesX; i++) {
+            ctx.beginPath();
+            ctx.moveTo(i * width / numLinesX, 0);
+            ctx.lineTo(i * width / numLinesX, height);
+            ctx.stroke();
+        }
+
+        // Lignes horizontales
+        for (let i = 0; i <= numLinesY; i++) {
+            ctx.beginPath();
+            ctx.moveTo(0, i * height / numLinesY);
+            ctx.lineTo(width, i * height / numLinesY);
+            ctx.stroke();
+        }
+    }
+
+    // Fonction pour dessiner les points de données
+    function drawGraph() {
+        drawGrid();
+
+        if (dataPoints.length > 1) {
+            ctx.beginPath();
+            ctx.strokeStyle = '#00ff00'; // Couleur de la ligne (vert néon)
+            ctx.lineWidth = 2;
+
+            const step = width / (maxPoints - 1);
+            const scaleY = height / 2;
+
+            ctx.moveTo(0, height / 2 - dataPoints[0] * scaleY);
+
+            for (let i = 1; i < dataPoints.length; i++) {
+                const x = i * step;
+                const y = height / 2 - dataPoints[i] * scaleY;
+                ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+        }
+    }
+
+    // Fonction pour simuler la réception de nouvelles données
+    function fetchData() {
+        // Remplacez cette partie par votre propre source de données
+        // Par exemple, une connexion WebSocket ou un EventSource
+        const newData = Math.sin(Date.now() / 100) * 0.5 + Math.random() * 0.1;
+
+        dataPoints.push(newData);
+        if (dataPoints.length > maxPoints) {
+            dataPoints.shift(); // Supprime le point le plus ancien
+        }
+    }
+
+    // Fonction d'animation principale
+    function animate() {
+        if (isRunning) {
+            fetchData();
+            drawGraph();
+            animationFrameId = requestAnimationFrame(animate);
+        }
+    }
+
+    // Fonctions de contrôle
+    function startOscilloscope() {
+        if (!isRunning) {
+            isRunning = true;
+            animate();
+        }
+    }
+
+    function stopOscilloscope() {
+        isRunning = false;
+        if (animationFrameId) {
+            cancelAnimationFrame(animationFrameId);
+        }
+    }
+
+    // Initialisation
+    drawGrid();
     </script>
 
 </body>
