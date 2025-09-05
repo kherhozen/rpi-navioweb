@@ -35,9 +35,6 @@
     </div>
 
     <h1>Barometer</h1>
-    <div id="baro-raw" class="label">
-        ...
-    </div>
 
     <div id="oscilloscope-container">
         <canvas id="oscilloscope" width="400" height="200"></canvas>
@@ -123,10 +120,18 @@
             ctx.lineTo(width, i * height / numLinesY);
             ctx.stroke();
         }
+
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.font = '32px Arial'; // Police et taille du texte
+        ctx.fillStyle = "#333";
+        ctx.fillText("Barometer", width/2, height/2);
     }
 
     // Fonction pour dessiner les étiquettes de l'axe Y
     function drawLabels() {
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'top';
         ctx.font = '14px Arial'; // Police et taille du texte
         dataPoints.forEach((line, lineIndex) => {
             if (lineIndex > 0) {
@@ -166,6 +171,8 @@
                         ctx.lineTo(x, y);
                     }
                     ctx.stroke();
+                    ctx.textAlign = 'left';
+                    ctx.textBaseline = 'top';
                     ctx.fillStyle = colors[lineIndex-1];
                     ctx.fillText(`${line[line.length-1].toFixed(1)}`, width-50, 15+20*(lineIndex-1));
                 }
@@ -201,7 +208,6 @@
                             break;
                         }
                     }
-                    document.getElementById("baro-raw").innerHTML = event.data
                 } catch (e) {
                     console.error('Erreur lors de l\'analyse des données JSON:', e);
                 }
