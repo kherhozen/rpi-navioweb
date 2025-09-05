@@ -179,6 +179,8 @@
                             dataPoints[0].shift();
                             dataPoints[1].shift();
                             dataPoints[2].shift();
+                        } else {
+                            break;
                         }
                     }
                     document.getElementById("baro-raw").innerHTML = event.data
