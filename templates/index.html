@@ -125,9 +125,24 @@
         }
     }
 
+    // Fonction pour dessiner les étiquettes de l'axe Y
+    function drawLabels() {
+        ctx.font = '14px Arial'; // Police et taille du texte
+        dataPoints.forEach((line, lineIndex) => {
+            if (lineIndex > 0) {
+                ctx.fillStyle = colors[lineIndex-1];
+                ctx.fillText(yMax[lineIndex-1], 10*lineIndex, 20);
+                ctx.fillText(yMin[lineIndex-1], 10*lineIndex, height - 10);
+            }
+        });
+        ctx.fillStyle = "#0000ff";
+        ctx.fillText(tRange, width - 10, height - 10);
+    }
+
     // Fonction pour dessiner les points de données
     function drawGraph() {
         drawGrid();
+        drawLabels();
 
         dataPoints.forEach((line, lineIndex) => {
             if (lineIndex > 0) {
