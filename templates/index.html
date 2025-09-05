@@ -95,7 +95,7 @@
     let isRunning = false;
     let animationFrameId = null;
 
-    const maxPoints = 200; // Nombre de points affichés à la fois
+    const tRange = 20;
     const yMin = [1000, 25];
     const yMax = [1020, 35];
 
@@ -136,7 +136,7 @@
                     ctx.strokeStyle = colors[lineIndex-1];
                     ctx.lineWidth = 2;
 
-                    const step = width / (maxPoints - 1);
+                    const scaleX = width/tRange;
 
                     const getYPosition = (value) => {
                         return height*(1 - (value - yMin[lineIndex-1])/(yMax[lineIndex-1] - yMin[lineIndex-1]));
@@ -145,7 +145,7 @@
                     ctx.moveTo(0, getYPosition(line[0]));
 
                     for (let i = 1; i < line.length; i++) {
-                        const x = i * step;
+                        const x = (dataPoints[0][i] - dataPoints[0][0])*scaleX;
                         const y = getYPosition(line[i]);
                         ctx.lineTo(x, y);
                     }
@@ -174,10 +174,12 @@
                     dataPoints[0].push(values.time);
                     dataPoints[1].push(values.pressure);
                     dataPoints[2].push(values.temperature);
-                    if (dataPoints[0].length > maxPoints) {
-                        dataPoints[0].shift();
-                        dataPoints[1].shift();
-                        dataPoints[2].shift();
+                    while (dataPoints[0].length > 1) {
+                        if (dataPoints[0][dataPoints[0].length-1] - dataPoints[0][0] > tRange) {
+                            dataPoints[0].shift();
+                            dataPoints[1].shift();
+                            dataPoints[2].shift();
+                        }
                     }
                     document.getElementById("baro-raw").innerHTML = event.data
                 } catch (e) {
