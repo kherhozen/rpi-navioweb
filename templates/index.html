@@ -92,7 +92,8 @@
     const width = canvas.width;
     const height = canvas.height;
 
-    let dataPoints = [];
+    let pressDataPoints = [];
+    let tempDataPoints = [];
     let isRunning = false;
     let animationFrameId = null;
 
@@ -128,41 +129,44 @@
     function drawGraph() {
         drawGrid();
 
-        if (dataPoints.length > 1) {
+        if (pressDataPoints.length > 1) {
             ctx.beginPath();
             ctx.strokeStyle = '#00ff00'; // Couleur de la ligne (vert néon)
             ctx.lineWidth = 2;
 
             const step = width / (maxPoints - 1);
-            const scaleY = height / 2;
+            const scaleY = height / 500;
+            const offY = 700*scaleY;
 
-            ctx.moveTo(0, height / 2 - dataPoints[0] * scaleY);
+            ctx.moveTo(0, offY - pressDataPoints[0]*scaleY);
 
-            for (let i = 1; i < dataPoints.length; i++) {
-                const x = i * step;
-                const y = height / 2 - dataPoints[i] * scaleY;
-                ctx.lineTo(x, y);
+            for (let i = 1; i < pressDataPoints.length; i++) {
+                ctx.lineTo(i*step, offY - pressDataPoints[i]*scaleY);
             }
             ctx.stroke();
         }
-    }
 
-    // Fonction pour simuler la réception de nouvelles données
-    function fetchData() {
-        // Remplacez cette partie par votre propre source de données
-        // Par exemple, une connexion WebSocket ou un EventSource
-        const newData = Math.sin(Date.now() / 100) * 0.5 + Math.random() * 0.1;
+        if (tempDataPoints.length > 1) {
+            ctx.beginPath();
+            ctx.strokeStyle = '#00ff00'; // Couleur de la ligne (vert néon)
+            ctx.lineWidth = 2;
 
-        dataPoints.push(newData);
-        if (dataPoints.length > maxPoints) {
-            dataPoints.shift(); // Supprime le point le plus ancien
+            const step = width / (maxPoints - 1);
+            const scaleY = height / 60;
+            const offY = -10*scaleY;
+
+            ctx.moveTo(0, offY - tempDataPoints[0]*scaleY);
+
+            for (let i = 1; i < tempDataPoints.length; i++) {
+                ctx.lineTo(i*step, offY - tempDataPoints[i]*scaleY);
+            }
+            ctx.stroke();
         }
     }
 
     // Fonction d'animation principale
     function animate() {
         if (isRunning) {
-            fetchData();
             drawGraph();
             animationFrameId = requestAnimationFrame(animate);
         }
@@ -172,6 +176,34 @@
     function startOscilloscope() {
         if (!isRunning) {
             isRunning = true;
+            eventSource = new EventSource('/events');
+            eventSource.onmessage = function(event) {
+                if (event.data.startsWith("pressure") {
+                    const value = parseFloat(event.data.split('=')[1];
+                    if (!isNaN(value)) {
+                        pressureDataPoints.push(value);
+                        if (pressureDataPoints.length > maxPoints) {
+                            pressureDataPoints.shift(); // Supprime le point le plus ancien
+                        }
+                    } else {
+                        console.error('Donnée reçue non valide:', event.data);
+                    }
+                } else if (event.data.startsWith("temperature") {
+                    const value = parseFloat(event.data.split('=')[1];
+                    if (!isNaN(value)) {
+                        temperatureDataPoints.push(value);
+                        if (temperatureDataPoints.length > maxPoints) {
+                            temperatureDataPoints.shift(); // Supprime le point le plus ancien
+                        }
+                    } else {
+                        console.error('Donnée reçue non valide:', event.data);
+                    }
+                }
+            };
+            eventSource.onerror = function(error) {
+                console.error('Erreur EventSource:', error);
+                stopOscilloscope();
+            };
             animate();
         }
     }
