@@ -35,7 +35,6 @@
     </div>
 
     <h1>Barometer</h1>
-    <div id="baro-container">...</div>
 
     <div id="oscilloscope-container">
         <canvas id="oscilloscope" width="400" height="200"></canvas>
@@ -47,10 +46,6 @@
     </div>
 
     <script>
-    var source = new EventSource("/events");
-    source.onmessage = function(event) {
-        document.getElementById("baro-container").innerHTML = event.data;
-    };
 
     function sendJsonToServer(serverUrl, dataObject="") {
         const requestOptions = {
