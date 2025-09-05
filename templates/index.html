@@ -131,12 +131,12 @@
         dataPoints.forEach((line, lineIndex) => {
             if (lineIndex > 0) {
                 ctx.fillStyle = colors[lineIndex-1];
-                ctx.fillText(yMax[lineIndex-1], 5+60*(lineIndex-1), 15);
-                ctx.fillText(yMin[lineIndex-1], 5+60*(lineIndex-1), height-5);
+                ctx.fillText(yMax[lineIndex-1], 5+50*(lineIndex-1), 15);
+                ctx.fillText(yMin[lineIndex-1], 5+50*(lineIndex-1), height-5);
             }
         });
         ctx.fillStyle = "#ffffff";
-        ctx.fillText(tRange, width-15, height-5);
+        ctx.fillText(tRange, width-20, height-5);
     }
 
     // Fonction pour dessiner les points de données
