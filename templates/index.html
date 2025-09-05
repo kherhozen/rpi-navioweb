@@ -96,8 +96,8 @@
     let animationFrameId = null;
 
     const maxPoints = 200; // Nombre de points affichés à la fois
-    const yMin = [900, 20];
-    const yMax = [1100, 40];
+    const yMin = [1000, 25];
+    const yMax = [1020, 35];
 
     // Fonction pour dessiner la grille (facultatif)
     function drawGrid() {
@@ -179,7 +179,7 @@
                         dataPoints[1].shift();
                         dataPoints[2].shift();
                     }
-                    document.getElementById("baro-raw").innerHTML = values
+                    document.getElementById("baro-raw").innerHTML = event.data
                 } catch (e) {
                     console.error('Erreur lors de l\'analyse des données JSON:', e);
                 }
