@@ -48,17 +48,17 @@ class Barometer:
         self.pressure = 0.0 # Calculated Pressure
 
     def initialize(self):
-        self.c1 = int.from_bytes(self.bus.read_block_data(self.address, self.__MS5611_RA_C1)) #Pressure Sensitivity
+        self.c1 = int.from_bytes(self.bus.read_i2c_block_data(self.address, self.__MS5611_RA_C1)) #Pressure Sensitivity
         #time.sleep(0.05)
-        self.c2 = int.from_bytes(self.bus.read_block_data(self.address, self.__MS5611_RA_C2)) #Pressure Offset
+        self.c2 = int.from_bytes(self.bus.read_i2c_block_data(self.address, self.__MS5611_RA_C2)) #Pressure Offset
         #time.sleep(0.05)
-        self.c3 = int.from_bytes(self.bus.read_block_data(self.address, self.__MS5611_RA_C3)) #Temperature coefficient of pressure sensitivity
+        self.c3 = int.from_bytes(self.bus.read_i2c_block_data(self.address, self.__MS5611_RA_C3)) #Temperature coefficient of pressure sensitivity
         #time.sleep(0.05)
-        self.c4 = int.from_bytes(self.bus.read_block_data(self.address, self.__MS5611_RA_C4)) #Temperature coefficient of pressure offset
+        self.c4 = int.from_bytes(self.bus.read_i2c_block_data(self.address, self.__MS5611_RA_C4)) #Temperature coefficient of pressure offset
         #time.sleep(0.05)
-        self.c5 = int.from_bytes(self.bus.read_block_data(self.address, self.__MS5611_RA_C5)) #Reference temperature
+        self.c5 = int.from_bytes(self.bus.read_i2c_block_data(self.address, self.__MS5611_RA_C5)) #Reference temperature
         #time.sleep(0.05)
-        self.c6 = int.from_bytes(self.bus.read_block_data(self.address, self.__MS5611_RA_C6)) #Temperature coefficient of the temperature
+        self.c6 = int.from_bytes(self.bus.read_i2c_block_data(self.address, self.__MS5611_RA_C6)) #Temperature coefficient of the temperature
 
         self.update()
 
@@ -69,10 +69,10 @@ class Barometer:
         self.bus.write_byte(self.address, self.__MS5611_RA_D2_OSR_4096)
 
     def read_pressure(self):
-        self.d1 = int.from_bytes(self.bus.read_block_data(self.address, self.__MS5611_RA_ADC))
+        self.d1 = int.from_bytes(self.bus.read_i2c_block_data(self.address, self.__MS5611_RA_ADC))
 
     def read_temperature(self):
-        self.d2 = int.from_bytes(self.bus.read_block_data(self.address, self.__MS5611_RA_ADC))
+        self.d2 = int.from_bytes(self.bus.read_i2c_block_data(self.address, self.__MS5611_RA_ADC))
 
     def calculate(self):
         dt = self.d2 - self.c5*2**8
