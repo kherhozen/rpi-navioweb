@@ -48,7 +48,6 @@ class Barometer:
         self.pressure = 0.0 # Calculated Pressure
 
     def initialize(self):
-
         self.c1 = int.from_bytes(self.bus.read_i2c_block_data(self.address, self.__MS5611_RA_C1, 2), byteorder='big')
         #time.sleep(0.05)
         self.c2 = int.from_bytes(self.bus.read_i2c_block_data(self.address, self.__MS5611_RA_C2, 2), byteorder='big')
