@@ -87,7 +87,7 @@
     const width = canvas.width;
     const height = canvas.height;
 
-    let dataPoints = [ [], [] ];
+    let dataPoints = [ [], [], [] ];
     const colors = ['#00ff00', '#ff0000']
     let isRunning = false;
     let animationFrameId = null;
@@ -127,25 +127,27 @@
         drawGrid();
 
         dataPoints.forEach((line, lineIndex) => {
-            if (line.length > 1) {
-                ctx.beginPath();
-                ctx.strokeStyle = colors[lineIndex];
-                ctx.lineWidth = 2;
+            if (lineIndex > 0) {
+                if (line.length > 1) {
+                    ctx.beginPath();
+                    ctx.strokeStyle = colors[lineIndex];
+                    ctx.lineWidth = 2;
 
-                const step = width / (maxPoints - 1);
+                    const step = width / (maxPoints - 1);
 
-                const getYPosition = (value) => {
-                    return height*(1 - (value - yMin[lineIndex])/(yMax[lineIndex] - yMin[lineIndex]));
-                };
+                    const getYPosition = (value) => {
+                        return height*(1 - (value - yMin[lineIndex])/(yMax[lineIndex] - yMin[lineIndex]));
+                    };
 
-                ctx.moveTo(0, getYPosition(line[0]));
+                    ctx.moveTo(0, getYPosition(line[0]));
 
-                for (let i = 1; i < line.length; i++) {
-                    const x = i * step;
-                    const y = getYPosition(line[i]);
-                    ctx.lineTo(x, y);
+                    for (let i = 1; i < line.length; i++) {
+                        const x = i * step;
+                        const y = getYPosition(line[i]);
+                        ctx.lineTo(x, y);
+                    }
+                    ctx.stroke();
                 }
-                ctx.stroke();
             }
         });
     }
@@ -164,26 +166,20 @@
             isRunning = true;
             eventSource = new EventSource('/events');
             eventSource.onmessage = function(event) {
-                if (event.data.startsWith("pressure")) {
-                    const value = parseFloat(event.data.split('=')[1]);
-                    if (!isNaN(value)) {
-                        dataPoints[0].push(value);
-                        if (dataPoints[0].length > maxPoints) {
-                            dataPoints[0].shift(); // Supprime le point le plus ancien
-                        }
+                try {
+                    const values = JSON.parse(event.data);
+                    if (Array.isArray(values) && values.length === 3 && values.every(val => typeof val === 'number')) {
+                        values.forEach((value, index) => {
+                            dataPoints[index].push(value);
+                            if (dataPoints[index].length > maxPoints) {
+                                dataPoints[index].shift(); // Supprime le point le plus ancien
+                            }
+                        });
                     } else {
-                        console.error('Donnée reçue non valide:', event.data);
+                        console.error('Donnée reçue non valide (format attendu: un tableau de 3 nombres):', event.data);
                     }
-                } else if (event.data.startsWith("temperature")) {
-                    const value = parseFloat(event.data.split('=')[1]);
-                    if (!isNaN(value)) {
-                        dataPoints[1].push(value);
-                        if (dataPoints[1].length > maxPoints) {
-                            dataPoints[1].shift(); // Supprime le point le plus ancien
-                        }
-                    } else {
-                        console.error('Donnée reçue non valide:', event.data);
-                    }
+                } catch (e) {
+                    console.error('Erreur lors de l\'analyse des données JSON:', e);
                 }
             };
             eventSource.onerror = function(error) {

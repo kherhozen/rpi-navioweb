@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, jsonify, Response
+import json
 import navio.led as navio_led
 import navio.barometer as navio_baro
 import time
@@ -11,9 +12,12 @@ app.baro.start()
 
 def generate_events():
     while True:
-        yield f"data: time={time.time():.3f}\n\n"
-        yield f"data: temperature={app.baro.baro.get_temperature():.1f}\n\n"
-        yield f"data: pressure={app.baro.baro.get_pressure():.0f}\n\n"
+        data = {
+            "time": time.time(),
+            "temperature": app.baro.baro.get_temperature(),
+            "pressure": app.baro.baro.get_pressure()
+        }
+        yield f"data: {json.dumps(data)}\n\n"
         time.sleep(0.5)
 
 @app.route('/events')
