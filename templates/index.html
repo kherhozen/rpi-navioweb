@@ -130,13 +130,13 @@
             if (lineIndex > 0) {
                 if (line.length > 1) {
                     ctx.beginPath();
-                    ctx.strokeStyle = colors[lineIndex];
+                    ctx.strokeStyle = colors[lineIndex-1];
                     ctx.lineWidth = 2;
 
                     const step = width / (maxPoints - 1);
 
                     const getYPosition = (value) => {
-                        return height*(1 - (value - yMin[lineIndex])/(yMax[lineIndex] - yMin[lineIndex]));
+                        return height*(1 - (value - yMin[lineIndex-1])/(yMax[lineIndex-1] - yMin[lineIndex-1]));
                     };
 
                     ctx.moveTo(0, getYPosition(line[0]));
@@ -176,7 +176,6 @@
                         dataPoints[1].shift();
                         dataPoints[2].shift();
                     }
-                    console.log(dataPoints)
                 } catch (e) {
                     console.error('Erreur lors de l\'analyse des données JSON:', e);
                 }
@@ -193,6 +192,10 @@
         isRunning = false;
         if (animationFrameId) {
             cancelAnimationFrame(animationFrameId);
+        }
+        if (eventSource) {
+            eventSource.close();
+            eventSource = null;
         }
     }
 
