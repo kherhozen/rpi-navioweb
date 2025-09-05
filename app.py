@@ -10,14 +10,13 @@ app.baro = navio_baro.BarometerManager()
 app.baro.start()
 
 def generate_events():
+    print("hello")
     yield f"data: {app.baro.get_data_str()}\n\n"
     time.sleep(0.5)
-
 
 @app.route('/events')
 def events():
     return Response(generate_events(), mimetype="text/event-stream")
-
 
 @app.route('/')
 def index():
