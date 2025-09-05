@@ -95,7 +95,7 @@
     let isRunning = false;
     let animationFrameId = null;
 
-    const tRange = 30;
+    const tRange = 20;
     const yMin = [1005, 30];
     const yMax = [1010, 34];
 
@@ -175,7 +175,7 @@
                     dataPoints[1].push(values.pressure);
                     dataPoints[2].push(values.temperature);
                     while (dataPoints[0].length > 1) {
-                        if (dataPoints[0][dataPoints[0].length-1] - dataPoints[0][0] > tRange + 0.1) {
+                        if (dataPoints[0][dataPoints[0].length-1] - dataPoints[0][0] > tRange*2) {
                             dataPoints[0].shift();
                             dataPoints[1].shift();
                             dataPoints[2].shift();
