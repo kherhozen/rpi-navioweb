@@ -69,11 +69,10 @@ class Barometer:
         self.bus.write_byte(self.address, self.__MS5611_RA_D2_OSR_4096)
 
     def read_pressure(self):
-        print(self.bus.read_i2c_block_data(self.address, self.__MS5611_RA_ADC))
-        self.d1 = int.from_bytes(self.bus.read_i2c_block_data(self.address, self.__MS5611_RA_ADC, 4), byteorder='big')
+        self.d1 = int.from_bytes(self.bus.read_i2c_block_data(self.address, self.__MS5611_RA_ADC, 3), byteorder='big')
 
     def read_temperature(self):
-        self.d2 = int.from_bytes(self.bus.read_i2c_block_data(self.address, self.__MS5611_RA_ADC, 4), byteorder='big')
+        self.d2 = int.from_bytes(self.bus.read_i2c_block_data(self.address, self.__MS5611_RA_ADC, 3), byteorder='big')
 
     def calculate(self):
         dt = self.d2 - self.c5*2**8
