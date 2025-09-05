@@ -11,9 +11,9 @@ app.baro.start()
 
 def generate_events():
     while True:
-        yield f"data: time={time.time():.3f}"
-        yield f"data: temperature={app.baro.baro.get_temperature():.1f}"
-        yield f"data: pressure={app.baro.baro.get_pressure():.0f}"
+        yield f"data: time={time.time():.3f}\n\n"
+        yield f"data: temperature={app.baro.baro.get_temperature():.1f}\n\n"
+        yield f"data: pressure={app.baro.baro.get_pressure():.0f}\n\n"
         time.sleep(0.5)
 
 @app.route('/events')
