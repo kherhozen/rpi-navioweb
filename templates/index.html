@@ -179,7 +179,7 @@
             eventSource = new EventSource('/events');
             eventSource.onmessage = function(event) {
                 if (event.data.startsWith("pressure")) {
-                    const value = parseFloat(event.data.split('=')[1];
+                    const value = parseFloat(event.data.split('=')[1]);
                     if (!isNaN(value)) {
                         pressureDataPoints.push(value);
                         if (pressureDataPoints.length > maxPoints) {
@@ -189,7 +189,7 @@
                         console.error('Donnée reçue non valide:', event.data);
                     }
                 } else if (event.data.startsWith("temperature")) {
-                    const value = parseFloat(event.data.split('=')[1];
+                    const value = parseFloat(event.data.split('=')[1]);
                     if (!isNaN(value)) {
                         temperatureDataPoints.push(value);
                         if (temperatureDataPoints.length > maxPoints) {
