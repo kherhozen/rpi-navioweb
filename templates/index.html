@@ -35,6 +35,9 @@
     </div>
 
     <h1>Barometer</h1>
+    <div id="baro-raw" class="label">
+        ...
+    </div>
 
     <div id="oscilloscope-container">
         <canvas id="oscilloscope" width="400" height="200"></canvas>
@@ -93,8 +96,8 @@
     let animationFrameId = null;
 
     const maxPoints = 200; // Nombre de points affichés à la fois
-    const yMin = [500, -10];
-    const yMax = [1200, 40];
+    const yMin = [900, 20];
+    const yMax = [1100, 40];
 
     // Fonction pour dessiner la grille (facultatif)
     function drawGrid() {
@@ -176,6 +179,7 @@
                         dataPoints[1].shift();
                         dataPoints[2].shift();
                     }
+                    document.getElementById("baro-raw").innerHTML = values
                 } catch (e) {
                     console.error('Erreur lors de l\'analyse des données JSON:', e);
                 }
