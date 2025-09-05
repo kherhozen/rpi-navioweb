@@ -92,8 +92,8 @@
     const width = canvas.width;
     const height = canvas.height;
 
-    let pressDataPoints = [];
-    let tempDataPoints = [];
+    let pressureDataPoints = [];
+    let temperatureDataPoints = [];
     let isRunning = false;
     let animationFrameId = null;
 
@@ -129,7 +129,7 @@
     function drawGraph() {
         drawGrid();
 
-        if (pressDataPoints.length > 1) {
+        if (pressureDataPoints.length > 1) {
             ctx.beginPath();
             ctx.strokeStyle = '#00ff00'; // Couleur de la ligne (vert néon)
             ctx.lineWidth = 2;
@@ -138,15 +138,15 @@
             const scaleY = height / 500;
             const offY = 700*scaleY;
 
-            ctx.moveTo(0, offY - pressDataPoints[0]*scaleY);
+            ctx.moveTo(0, offY - pressureDataPoints[0]*scaleY);
 
-            for (let i = 1; i < pressDataPoints.length; i++) {
-                ctx.lineTo(i*step, offY - pressDataPoints[i]*scaleY);
+            for (let i = 1; i < pressureDataPoints.length; i++) {
+                ctx.lineTo(i*step, offY - pressureDataPoints[i]*scaleY);
             }
             ctx.stroke();
         }
 
-        if (tempDataPoints.length > 1) {
+        if (temperatureDataPoints.length > 1) {
             ctx.beginPath();
             ctx.strokeStyle = '#00ff00'; // Couleur de la ligne (vert néon)
             ctx.lineWidth = 2;
@@ -155,10 +155,10 @@
             const scaleY = height / 60;
             const offY = -10*scaleY;
 
-            ctx.moveTo(0, offY - tempDataPoints[0]*scaleY);
+            ctx.moveTo(0, offY - temperatureDataPoints[0]*scaleY);
 
-            for (let i = 1; i < tempDataPoints.length; i++) {
-                ctx.lineTo(i*step, offY - tempDataPoints[i]*scaleY);
+            for (let i = 1; i < temperatureDataPoints.length; i++) {
+                ctx.lineTo(i*step, offY - temperatureDataPoints[i]*scaleY);
             }
             ctx.stroke();
         }
