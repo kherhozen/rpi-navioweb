@@ -16,6 +16,7 @@ body {
     color: white;
     font-weight: bold;
     padding: 0.75rem 1.5rem; /* Equivalent to py-3 px-6 */
+    margin: 0.5rem
     border-radius: 0.5rem; /* Equivalent to rounded-lg */
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* Equivalent to shadow-md */
     transition: background-color 0.3s ease, transform 0.3s ease;
@@ -48,6 +49,10 @@ div {
     padding: 10px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 #oscilloscope {
     background-color: #111;

@@ -130,7 +130,7 @@
             if (lineIndex > 0) {
                 ctx.fillStyle = colors[lineIndex-1];
                 ctx.textBaseline = 'top';
-                ctx.fillText(yMax[lineIndex-1], 5, 15+20*(lineIndex-1));
+                ctx.fillText(yMax[lineIndex-1], 5, 5+20*(lineIndex-1));
                 ctx.textBaseline = 'bottom';
                 ctx.fillText(yMin[lineIndex-1], 5, height-(5+20*(lineIndex-1)));
             }
@@ -171,7 +171,7 @@
                     ctx.textAlign = 'end';
                     ctx.textBaseline = 'top';
                     ctx.fillStyle = colors[lineIndex-1];
-                    ctx.fillText(`${line[line.length-1].toFixed(1)}`, width-5, 15+20*(lineIndex-1));
+                    ctx.fillText(`${line[line.length-1].toFixed(1)}`, width-5, 5+20*(lineIndex-1));
                 }
             }
         });
