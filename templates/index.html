@@ -34,15 +34,9 @@
         ...
     </div>
 
-    <h1>Barometer</h1>
-
     <div id="oscilloscope-container">
         <canvas id="oscilloscope" width="400" height="200"></canvas>
-    </div>
-
-    <div class="controls">
-        <button onclick="startOscilloscope()">Démarrer</button>
-        <button onclick="stopOscilloscope()">Arrêter</button>
+        <button id="oscilloscope_button" onclick="launchOscilloscope()" class="styled-button">Start</button>
     </div>
 
     <script>
@@ -192,9 +186,10 @@
     }
 
     // Fonctions de contrôle
-    function startOscilloscope() {
+    function launchOscilloscope() {
         if (!isRunning) {
             isRunning = true;
+            document.getElementById("oscilloscope_button").innerHTML = "Pause"
             eventSource = new EventSource('/events');
             eventSource.onmessage = function(event) {
                 try {
@@ -220,17 +215,16 @@
                 stopOscilloscope();
             };
             animate();
-        }
-    }
-
-    function stopOscilloscope() {
-        isRunning = false;
-        if (animationFrameId) {
-            cancelAnimationFrame(animationFrameId);
-        }
-        if (eventSource) {
-            eventSource.close();
-            eventSource = null;
+        } else {
+            isRunning = false;
+            if (animationFrameId) {
+                cancelAnimationFrame(animationFrameId);
+            }
+            if (eventSource) {
+                eventSource.close();
+                eventSource = null;
+            }
+            document.getElementById("oscilloscope_button").innerHTML = "Start"
         }
     }
 
