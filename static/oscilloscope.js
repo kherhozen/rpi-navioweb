@@ -1,3 +1,27 @@
+import java.util.ArrayList;
+import java.util.List;
+
+class Oscilloscope {
+
+    constructor(canvasId, nbLines, colors, timeSpan, yMin, yMax) {
+        this.canvas = canvasId;
+        this.ctx = this.canvas.getContext('2d');
+        this.dataPoints = new ArrayList<>();
+        for (int i = 0; i < nbLines; i++) {
+            this.dataPoints.add(new ArrayList<>());
+        }
+        this.colors = colors;
+        this.isRunning = false;
+        this.animationFrameId = null;
+        this.timeSpan = timeSpan;
+        this.yMin = yMin;
+        this.yMax = yMin;
+    }
+}
+
+const baroScope = new Oscilloscope(document.getElementById('oscilloscope'),
+                                   3, ['#00ff00', '#ff0000'])
+
 const canvas = document.getElementById('oscilloscope');
 const ctx = canvas.getContext('2d');
 const width = canvas.width;
