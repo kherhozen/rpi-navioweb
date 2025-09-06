@@ -3,70 +3,56 @@ import java.util.List;
 
 class Oscilloscope {
 
-    constructor(canvasId, nbLines, colors, timeSpan, yMin, yMax) {
+    constructor(canvasId, colors, timeSpan, yLims) {
         this.canvas = canvasId;
         this.ctx = this.canvas.getContext('2d');
-        this.dataPoints = new ArrayList<>();
-        for (int i = 0; i < nbLines; i++) {
-            this.dataPoints.add(new ArrayList<>());
+        this.gridColor = '#333';
+        this.numLinesX = 20;
+        this.numLinesY = 10;
+        this.dataPoints = [];
+        this.yMin = [];
+        this.yMax = [];
+        for (let i = 0; i < yLims.length + 1; i++) {
+            this.dataPoints.push([]);
+        }
+        for (let i = 0; i < yLims.length; i++) {
+            this.yMin.push(yLims[i][0])
+            this.yMax.push(yLims[i][1])
         }
         this.colors = colors;
         this.isRunning = false;
         this.animationFrameId = null;
         this.timeSpan = timeSpan;
-        this.yMin = yMin;
-        this.yMax = yMin;
     }
 }
 
 const baroScope = new Oscilloscope(document.getElementById('oscilloscope'),
-                                   3, ['#00ff00', '#ff0000'])
+                                   ['#00ff00', '#ff0000'], 20, [[1005, 1010], [30, 34]])
 
-const canvas = document.getElementById('oscilloscope');
-const ctx = canvas.getContext('2d');
-const width = canvas.width;
-const height = canvas.height;
+    drawGrid() {
+        this.ctx.clearRect(0, 0, width, height);
+        this.ctx.strokeStyle = gridColor;
 
-let dataPoints = [ [], [], [] ];
-const colors = ['#00ff00', '#ff0000']
-let isRunning = false;
-let animationFrameId = null;
+        for (let i = 0; i <= numLinesX; i++) {
+            this.ctx.beginPath();
+            this.ctx.moveTo(i * width / numLinesX, 0);
+            this.ctx.lineTo(i * width / numLinesX, height);
+            this.ctx.stroke();
+        }
 
-const tRange = 20;
-const yMin = [1005, 30];
-const yMax = [1010, 34];
+        for (let i = 0; i <= numLinesY; i++) {
+            this.ctx.beginPath();
+            this.ctx.moveTo(0, i * height / numLinesY);
+            this.ctx.lineTo(width, i * height / numLinesY);
+            this.ctx.stroke();
+        }
 
-// Fonction pour dessiner la grille (facultatif)
-function drawGrid() {
-    const gridColor = '#333';
-    const numLinesX = 20;
-    const numLinesY = 10;
-
-    ctx.clearRect(0, 0, width, height);
-    ctx.strokeStyle = gridColor;
-
-    // Lignes verticales
-    for (let i = 0; i <= numLinesX; i++) {
-        ctx.beginPath();
-        ctx.moveTo(i * width / numLinesX, 0);
-        ctx.lineTo(i * width / numLinesX, height);
-        ctx.stroke();
+        this.ctx.textAlign = 'center';
+        this.ctx.textBaseline = 'middle';
+        this.ctx.font = '64px Arial';
+        this.ctx.fillStyle = "#555";
+        this.ctx.fillText("Barometer", width/2, height/2);
     }
-
-    // Lignes horizontales
-    for (let i = 0; i <= numLinesY; i++) {
-        ctx.beginPath();
-        ctx.moveTo(0, i * height / numLinesY);
-        ctx.lineTo(width, i * height / numLinesY);
-        ctx.stroke();
-    }
-
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.font = '64px Arial'; // Police et taille du texte
-    ctx.fillStyle = "#555";
-    ctx.fillText("Barometer", width/2, height/2);
-}
 
 // Fonction pour dessiner les étiquettes de l'axe Y
 function drawLabels() {
