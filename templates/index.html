@@ -123,25 +123,28 @@
 
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.font = '32px Arial'; // Police et taille du texte
-        ctx.fillStyle = "#333";
+        ctx.font = '64px Arial'; // Police et taille du texte
+        ctx.fillStyle = "#555";
         ctx.fillText("Barometer", width/2, height/2);
     }
 
     // Fonction pour dessiner les étiquettes de l'axe Y
     function drawLabels() {
-        ctx.textAlign = 'left';
-        ctx.textBaseline = 'top';
+        ctx.textAlign = 'start';
         ctx.font = '14px Arial'; // Police et taille du texte
         dataPoints.forEach((line, lineIndex) => {
             if (lineIndex > 0) {
                 ctx.fillStyle = colors[lineIndex-1];
-                ctx.fillText(yMax[lineIndex-1], 5+50*(lineIndex-1), 15);
-                ctx.fillText(yMin[lineIndex-1], 5+50*(lineIndex-1), height-5);
+                ctx.textBaseline = 'top';
+                ctx.fillText(yMax[lineIndex-1], 5, 15+20*(lineIndex-1));
+                ctx.textBaseline = 'bottom';
+                ctx.fillText(yMin[lineIndex-1], 5, height-(5+20*(lineIndex-1)));
             }
         });
         ctx.fillStyle = "#ffffff";
-        ctx.fillText(tRange, width-20, height-5);
+        ctx.textAlign = 'end';
+        ctx.textBaseline = 'bottom';
+        ctx.fillText(tRange, width-5, height-5);
     }
 
     // Fonction pour dessiner les points de données
@@ -171,10 +174,10 @@
                         ctx.lineTo(x, y);
                     }
                     ctx.stroke();
-                    ctx.textAlign = 'left';
+                    ctx.textAlign = 'end';
                     ctx.textBaseline = 'top';
                     ctx.fillStyle = colors[lineIndex-1];
-                    ctx.fillText(`${line[line.length-1].toFixed(1)}`, width-50, 15+20*(lineIndex-1));
+                    ctx.fillText(`${line[line.length-1].toFixed(1)}`, width-5, 15+20*(lineIndex-1));
                 }
             }
         });
