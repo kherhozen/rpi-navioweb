@@ -1,13 +1,9 @@
+const canvas = document.getElementById('oscilloscope');
+const ctx = canvas.getContext('2d');
+const width = canvas.width;
+const height = canvas.height;
 
-
-    <script>
-
-    const canvas = document.getElementById('oscilloscope');
-    const ctx = canvas.getContext('2d');
-    const width = canvas.width;
-    const height = canvas.height;
-
-    let dataPoints = [ [], [], [] ];
+let dataPoints = [ [], [], [] ];
     const colors = ['#00ff00', '#ff0000']
     let isRunning = false;
     let animationFrameId = null;
