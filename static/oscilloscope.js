@@ -23,6 +23,7 @@ class Oscilloscope {
         this.timeSpan = timeSpan;
         this.scaleX = this.canvas.width/this.timeSpan;
         this.eventSource = null;
+        this.animate = this.animate.bind(this);
     }
 
     drawGrid() {
@@ -100,7 +101,7 @@ class Oscilloscope {
     animate() {
         if (this.isRunning) {
             this.drawGraph();
-            this.animationFrameId = requestAnimationFrame(this.animate.bind(this));
+            this.animationFrameId = requestAnimationFrame(this.animate);
         }
     }
 
