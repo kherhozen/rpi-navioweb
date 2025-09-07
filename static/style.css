@@ -70,3 +70,61 @@ div {
     color: white;
     border-radius: 5px;
 }
+
+.toggle-button {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%; /* Rendre le bouton rond */
+    border: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Styles pour l'état Play (défaut) */
+  .toggle-button.play {
+    background-color: #4CAF50; /* Vert */
+  }
+  
+  /* Styles pour l'état Pause */
+  .toggle-button.pause {
+    background-color: #FFC107; /* Ambre */
+  }
+
+  /* Styles de l'icône Play */
+  .icon-play {
+    border-top: 15px solid transparent;
+    border-bottom: 15px solid transparent;
+    border-left: 25px solid white; /* Triangle blanc pour l'icône Play */
+    margin-left: 5px; /* Ajustement visuel pour centrer */
+  }
+
+  /* Styles de l'icône Pause */
+  .icon-pause {
+    width: 20px;
+    height: 30px;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .icon-pause::before,
+  .icon-pause::after {
+    content: '';
+    width: 8px; /* Largeur de chaque barre de l'icône pause */
+    background-color: white; /* Barres blanches */
+  }
+
+  /* Masquer l'icône de pause par défaut et l'icône de lecture lorsque le bouton est en pause */
+  .toggle-button.play .icon-pause,
+  .toggle-button.pause .icon-play {
+    display: none;
+  }
+
+  /* Effet de clic (facultatif) */
+  .toggle-button:active {
+    transform: scale(0.95);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }

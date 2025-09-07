@@ -1,6 +1,3 @@
-import java.util.ArrayList;
-import java.util.List;
-
 class Oscilloscope {
 
     constructor(canvasId, title, colors, timeSpan, yLims) {
@@ -24,7 +21,8 @@ class Oscilloscope {
         this.isRunning = false;
         this.animationFrameId = null;
         this.timeSpan = timeSpan;
-        this.scaleX = this.canvas.width / this.timeSpan;
+        this.scaleX = this.canvas.width/this.timeSpan;
+        this.eventSource = null;
     }
 
     drawGrid() {
@@ -70,29 +68,26 @@ class Oscilloscope {
         this.ctx.fillText(this.timeSpan, this.canvas.width-5, this.canvas.height-5);
     }
 
-    function drawGraph() {
+    getYPosition(value, yMin, yMax) {
+        return this.canvas.height*(1 - (value - yMin)/(yMax - yMin));
+    };
+
+    drawGraph() {
         this.drawGrid();
         this.drawLabels();
         this.ctx.font = '14px Arial';
         this.ctx.textAlign = 'end';
         this.ctx.textBaseline = 'top';
+        this.ctx.lineWidth = 2;
         this.dataPoints.forEach((line, lineIndex) => {
             if (lineIndex > 0) {
                 if (line.length > 1) {
                     this.ctx.beginPath();
                     this.ctx.strokeStyle = this.colors[lineIndex-1];
-                    this.ctx.lineWidth = 2;
-
-                    const getYPosition = (value) => {
-                        return height*(1 - (value - yMin[lineIndex-1])/(yMax[lineIndex-1] - yMin[lineIndex-1]));
-                    };
-
-                    this.ctx.moveTo(0, getYPosition(line[0]));
-
+                    this.ctx.moveTo(0, this.getYPosition(line[0], yMin[lineIndex-1], yMax[lineIndex-1]));
                     for (let i = 1; i < line.length; i++) {
-                        const x = (this.dataPoints[0][i] - this.dataPoints[0][0])*this.scaleX;
-                        const y = getYPosition(line[i]);
-                        this.ctx.lineTo(x, y);
+                        this.ctx.lineTo((this.dataPoints[0][i] - this.dataPoints[0][0])*this.scaleX,
+                                        this.getYPosition(line[i], yMin[lineIndex-1], yMax[lineIndex-1]));
                     }
                     this.ctx.stroke();
                     this.ctx.fillStyle = this.colors[lineIndex-1];
@@ -105,49 +100,47 @@ class Oscilloscope {
     animate() {
         if (this.isRunning) {
             this.drawGraph();
-            this.animationFrameId = requestAnimationFrame(animate);
+            this.animationFrameId = requestAnimationFrame(this.animate);
         }
     }
 
-    launchOscilloscope() {
-        if (!this.isRunning) {
-            this.isRunning = true;
-            document.getElementById("oscilloscope_button").innerHTML = "Pause"
-            eventSource = new EventSource('/events');
-            eventSource.onmessage = function(event) {
-                try {
-                    const values = JSON.parse(event.data);
-                    dataPoints[0].push(values.time);
-                    dataPoints[1].push(values.pressure);
-                    dataPoints[2].push(values.temperature);
-                    while (dataPoints[0].length > 1) {
-                        if (dataPoints[0][dataPoints[0].length-2] - dataPoints[0][0] > tRange) {
-                            dataPoints[0].shift();
-                            dataPoints[1].shift();
-                            dataPoints[2].shift();
-                        } else {
-                            break;
+    startOscilloscope() {
+        this.isRunning = true;
+        this.eventSource = new EventSource('/events');
+        this.eventSource.onmessage = function(event) {
+            try {
+                const values = JSON.parse(event.data);
+                this.dataPoints[0].push(values.time);
+                this.dataPoints[1].push(values.pressure);
+                this.dataPoints[2].push(values.temperature);
+                while (this.dataPoints[0].length > 1) {
+                    if (this.dataPoints[0][this.dataPoints[0].length-2] - this.dataPoints[0][0] > this.timeSpan) {
+                        for (let i = 0; i < this.dataPoints.length; i++) {
+                            this.dataPoints[i].shift();
                         }
+                    } else {
+                        break;
                     }
-                } catch (e) {
-                    console.error('Erreur lors de l\'analyse des données JSON:', e);
                 }
-            };
-            eventSource.onerror = function(error) {
-                console.error('Erreur EventSource:', error);
-                stopOscilloscope();
-            };
-            animate();
-        } else {
-            isRunning = false;
-            if (animationFrameId) {
-                cancelAnimationFrame(animationFrameId);
+            } catch (e) {
+                console.error('Erreur lors de l\'analyse des données JSON:', e);
             }
-            if (eventSource) {
-                eventSource.close();
-                eventSource = null;
-            }
-            document.getElementById("oscilloscope_button").innerHTML = "Start"
+        };
+        this.eventSource.onerror = function(error) {
+            console.error('Erreur EventSource:', error);
+            this.stopOscilloscope();
+        };
+        animate();
+    }
+
+    stopOscilloscope() {
+        this.isRunning = false;
+        if (this.animationFrameId) {
+            cancelAnimationFrame(this.animationFrameId);
+        }
+        if (this.eventSource) {
+            this.eventSource.close();
+            this.eventSource = null;
         }
     }
 }

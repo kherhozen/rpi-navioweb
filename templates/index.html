@@ -38,12 +38,26 @@
 
     <div id="oscilloscope-container">
         <canvas id="oscilloscope" width="400" height="200"></canvas>
-        <button id="oscilloscope_button" onclick="launchOscilloscope()" class="styled-button">Start</button>
+        <button id="oscilloscope_button" class="toggle-button play" onclick="launchOscilloscope()">
+            <div class="icon-play"></div>
+            <div class="icon-pause"></div>
+        </button>
     </div>
 
     <script>
         const baroScope = new Oscilloscope(document.getElementById('oscilloscope'), "Barometer"
                                    ['#00ff00', '#ff0000'], 20, [[1005, 1010], [30, 34]])
+        launchOscilloscope() {
+            if (!baroScope.isRunning) {
+                baroScope.startOscilloscope();
+                document.getElementById("oscilloscope_button").classList.remove('play');
+                document.getElementById("oscilloscope_button").classList.add('pause');
+            } else {
+                baroScope.stopOscilloscope();
+                document.getElementById("oscilloscope_button").classList.remove('pause');
+                document.getElementById("oscilloscope_button").classList.add('play');
+            }
+        }
     </script>
 
 </body>
