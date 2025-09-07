@@ -26,8 +26,8 @@ class Oscilloscope {
     }
 
     drawGrid() {
-        this.ctx.clearRect(0, 0, width, height);
-        this.ctx.strokeStyle = gridColor;
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.strokeStyle = this.gridColor;
 
         for (let i = 0; i <= numLinesX; i++) {
             this.ctx.beginPath();
@@ -47,7 +47,7 @@ class Oscilloscope {
         this.ctx.textBaseline = 'middle';
         this.ctx.font = '64px Arial';
         this.ctx.fillStyle = "#555";
-        this.ctx.fillText(this.title, width/2, height/2);
+        this.ctx.fillText(this.title, this.canvas.width/2, this.canvas.height/2);
     }
 
     drawLabels() {
@@ -100,14 +100,14 @@ class Oscilloscope {
     animate() {
         if (this.isRunning) {
             this.drawGraph();
-            this.animationFrameId = requestAnimationFrame(this.animate);
+            this.animationFrameId = requestAnimationFrame(this.animate.bind(this));
         }
     }
 
     startOscilloscope() {
         this.isRunning = true;
         this.eventSource = new EventSource('/events');
-        this.eventSource.onmessage = function(event) {
+        this.eventSource.onmessage = (event) => {
             try {
                 const values = JSON.parse(event.data);
                 this.dataPoints[0].push(values.time);
@@ -126,7 +126,7 @@ class Oscilloscope {
                 console.error('Erreur lors de l\'analyse des données JSON:', e);
             }
         };
-        this.eventSource.onerror = function(error) {
+        this.eventSource.onerror = (error) => {
             console.error('Erreur EventSource:', error);
             this.stopOscilloscope();
         };
