@@ -69,6 +69,7 @@ div {
   margin: 0.5rem;
   background-repeat: no-repeat;
   background-size: 80%;
+  background-position: center;
 }
 
 /* Styles pour l'état Play (défaut) */
