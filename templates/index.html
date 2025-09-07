@@ -47,7 +47,7 @@
 
     <script>
         const baroScope = new Oscilloscope(document.getElementById('oscilloscope'), "Barometer",
-                                            ['#00ff00', '#ff0000'], 20, [[1005, 1010], [30, 34]])
+                                            ['#00ff00', '#ff0000'], 20, [[900, 1100], [20, 40]])
         function launchOscilloscope() {
             if (!baroScope.isRunning) {
                 baroScope.startOscilloscope();
