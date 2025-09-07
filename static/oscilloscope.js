@@ -30,14 +30,14 @@ class Oscilloscope {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.ctx.strokeStyle = this.gridColor;
 
-        for (let i = 0; i <= numLinesX; i++) {
+        for (let i = 0; i <= this.numLinesX; i++) {
             this.ctx.beginPath();
             this.ctx.moveTo(i * this.canvas.width / this.numLinesX, 0);
             this.ctx.lineTo(i * this.canvas.width / this.numLinesX, this.canvas.height);
             this.ctx.stroke();
         }
 
-        for (let i = 0; i <= numLinesY; i++) {
+        for (let i = 0; i <= this.numLinesY; i++) {
             this.ctx.beginPath();
             this.ctx.moveTo(0, i * this.canvas.height / this.numLinesY);
             this.ctx.lineTo(this.canvas.width, i * this.canvas.height / this.numLinesY);
@@ -85,10 +85,10 @@ class Oscilloscope {
                 if (line.length > 1) {
                     this.ctx.beginPath();
                     this.ctx.strokeStyle = this.colors[lineIndex-1];
-                    this.ctx.moveTo(0, this.getYPosition(line[0], yMin[lineIndex-1], yMax[lineIndex-1]));
+                    this.ctx.moveTo(0, this.getYPosition(line[0], this.yMin[lineIndex-1], this.yMax[lineIndex-1]));
                     for (let i = 1; i < line.length; i++) {
                         this.ctx.lineTo((this.dataPoints[0][i] - this.dataPoints[0][0])*this.scaleX,
-                                        this.getYPosition(line[i], yMin[lineIndex-1], yMax[lineIndex-1]));
+                                        this.getYPosition(line[i], this.yMin[lineIndex-1], this.yMax[lineIndex-1]));
                     }
                     this.ctx.stroke();
                     this.ctx.fillStyle = this.colors[lineIndex-1];
@@ -131,7 +131,7 @@ class Oscilloscope {
             console.error('Erreur EventSource:', error);
             this.stopOscilloscope();
         };
-        this.animate(); //test
+        this.animate();
     }
 
     stopOscilloscope() {
