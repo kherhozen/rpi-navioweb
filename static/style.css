@@ -1,130 +1,84 @@
 /* Inter font configuration */
 body {
-    font-family: 'Inter', sans-serif;
-    background-color: #f3f4f6; /* Equivalent to bg-gray-100 */
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin: 0; /* Remove default body margin */
+  font-family: 'Inter', sans-serif;
+  background-color: #f3f4f6; /* Equivalent to bg-gray-100 */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0; /* Remove default body margin */
 }
 
 /* Custom styles for the main button */
 .styled-button {
-    background-color: #2563eb; /* Equivalent to bg-blue-600 */
-    color: white;
-    font-weight: bold;
-    padding: 0.75rem 1.5rem; /* Equivalent to py-3 px-6 */
-    margin: 0.5rem;
-    border-radius: 0.5rem; /* Equivalent to rounded-lg */
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* Equivalent to shadow-md */
-    transition: background-color 0.3s ease, transform 0.3s ease;
-    outline: none; /* Equivalent to focus:outline-none */
-    border: none;
-    cursor: pointer;
+  background-color: #2563eb; /* Equivalent to bg-blue-600 */
+  color: white;
+  font-weight: bold;
+  padding: 0.75rem 1.5rem; /* Equivalent to py-3 px-6 */
+  margin: 0.5rem;
+  border-radius: 0.5rem; /* Equivalent to rounded-lg */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* Equivalent to shadow-md */
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  outline: none; /* Equivalent to focus:outline-none */
+  border: none;
+  cursor: pointer;
 }
 
 .styled-button:hover {
-    background-color: #1d4ed8; /* Equivalent to hover:bg-blue-700 */
-    transform: scale(1.05); /* Equivalent to hover:scale-105 */
+  background-color: #1d4ed8; /* Equivalent to hover:bg-blue-700 */
+  transform: scale(1.05); /* Equivalent to hover:scale-105 */
 }
 
 .styled-button:focus {
-    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.5); /* Equivalent to focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 */
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.5); /* Equivalent to focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 */
 }
 
 .label {
-    font-weight: bold;
-    padding: 0.75rem 1.5rem; /* Equivalent to py-3 px-6 */
+  font-weight: bold;
+  padding: 0.75rem 1.5rem; /* Equivalent to py-3 px-6 */
 }
 
 div {
-    padding: 0.75rem 1.5rem; /* Equivalent to py-3 px-6 */
+  padding: 0.75rem 1.5rem; /* Equivalent to py-3 px-6 */
 }
 
 #oscilloscope-container {
-    border: 2px solid #333;
-    background-color: #000;
-    padding: 10px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+  border: 2px solid #333;
+  background-color: #000;
+  padding: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
+
 #oscilloscope {
-    background-color: #111;
-    display: block;
-}
-.controls {
-    margin-top: 20px;
-}
-.controls button {
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    border: none;
-    background-color: #007bff;
-    color: white;
-    border-radius: 5px;
+  background-color: #111;
+  display: block;
 }
 
 .toggle-button {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%; /* Rendre le bouton rond */
-    border: none;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: background-color 0.3s ease, transform 0.1s ease;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
+  width: 40px;
+  height: 40px;
+  border-radius: 50%; /* Rendre le bouton rond */
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+}
 
-  /* Styles pour l'état Play (défaut) */
-  .toggle-button.play {
-    background-color: #4CAF50; /* Vert */
-  }
-  
-  /* Styles pour l'état Pause */
-  .toggle-button.pause {
-    background-color: #FFC107; /* Ambre */
-  }
+/* Styles pour l'état Play (défaut) */
+.toggle-button.play {
+  background-color: #4CAF50; /* Vert */
+  background-image: url('icons8-play-48.png');
+}
 
-  /* Styles de l'icône Play */
-  .icon-play {
-    border-top: 15px solid transparent;
-    border-bottom: 15px solid transparent;
-    border-left: 25px solid white; /* Triangle blanc pour l'icône Play */
-    margin-left: 5px; /* Ajustement visuel pour centrer */
-  }
-
-  /* Styles de l'icône Pause */
-  .icon-pause {
-    width: 20px;
-    height: 30px;
-    display: flex;
-    justify-content: space-between;
-  }
-  
-  .icon-pause::before,
-  .icon-pause::after {
-    content: '';
-    width: 8px; /* Largeur de chaque barre de l'icône pause */
-    background-color: white; /* Barres blanches */
-  }
-
-  /* Masquer l'icône de pause par défaut et l'icône de lecture lorsque le bouton est en pause */
-  .toggle-button.play .icon-pause,
-  .toggle-button.pause .icon-play {
-    display: none;
-  }
-
-  /* Effet de clic (facultatif) */
-  .toggle-button:active {
-    transform: scale(0.95);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
+/* Styles pour l'état Pause */
+.toggle-button.pause {
+  background-color: #FFC107; /* Ambre */
+  background-image: url('icons8-pause-48.png');
+}
