@@ -130,7 +130,7 @@ class Oscilloscope {
             console.error('Erreur EventSource:', error);
             this.stopOscilloscope();
         };
-        animate();
+        this.animate();
     }
 
     stopOscilloscope() {
