@@ -48,8 +48,8 @@
     </div>
 
     <script>
-        const baroScope = new Oscilloscope(document.getElementById('oscilloscope'), "Barometer",
-                                            ['#00ff00', '#ff0000'], 20, [[900, 1100], [20, 40]])
+        const baroScope = new Oscilloscope(document.getElementById('oscilloscope'), "Barometer", 20, ["pressure", "temperature"],
+                                            ['#00ff00', '#ff0000'], [[900, 1100], [20, 40]])
         function launchOscilloscope() {
             if (!baroScope.isRunning) {
                 baroScope.startOscilloscope();

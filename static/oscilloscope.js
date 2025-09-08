@@ -1,23 +1,44 @@
+class OscilloscopeSignal {
+
+    constructor(name, unit, yMin, yMax, color, maxBufferSize=10000) {
+        this.name = name
+        this.unit = unit
+        this.yMin = yMin
+        this.yMax = yMax
+        this.color = color
+        this.tBuffer = []
+        this.valBuffer = []
+    }
+
+    length() {
+        return this.tBuffer.length;
+    }
+
+    push(t, val) {
+        this.tBuffer.push(t);
+        this.valBuffer.push(val);
+        if (this.tBuffer.length > maxBufferSize) {
+            this.tBuffer.shift();
+            this.valBuffer.shift();
+        }
+    }
+
+    shift() {
+        this.tBuffer.shift();
+        this.valBuffer.shift();
+    }
+}
+
 class Oscilloscope {
 
-    constructor(canvasId, title, colors, timeSpan, yLims) {
+    constructor(canvasId, title, timeSpan, signals) {
         this.canvas = canvasId;
         this.title = title;
         this.ctx = this.canvas.getContext('2d');
         this.gridColor = '#333';
         this.numLinesX = 20;
         this.numLinesY = 10;
-        this.dataPoints = [];
-        this.yMin = [];
-        this.yMax = [];
-        for (let i = 0; i < yLims.length + 1; i++) {
-            this.dataPoints.push([]);
-        }
-        for (let i = 0; i < yLims.length; i++) {
-            this.yMin.push(yLims[i][0])
-            this.yMax.push(yLims[i][1])
-        }
-        this.colors = colors;
+        this.signals = signals;
         this.isRunning = false;
         this.animationFrameId = null;
         this.timeSpan = timeSpan;
@@ -54,14 +75,12 @@ class Oscilloscope {
     drawLabels() {
         this.ctx.textAlign = 'start';
         this.ctx.font = '14px Arial';
-        this.dataPoints.forEach((line, lineIndex) => {
-            if (lineIndex > 0) {
-                this.ctx.fillStyle = this.colors[lineIndex-1];
-                this.ctx.textBaseline = 'top';
-                this.ctx.fillText(this.yMax[lineIndex-1], 5, 5+20*(lineIndex-1));
-                this.ctx.textBaseline = 'bottom';
-                this.ctx.fillText(this.yMin[lineIndex-1], 5, this.canvas.height-(5+20*(lineIndex-1)));
-            }
+        this.signals.forEach((signal, signalIndex) => {
+            this.ctx.fillStyle = signal.color;
+            this.ctx.textBaseline = 'top';
+            this.ctx.fillText(signal.yMax, 5, 5+20*(signalIndex-1));
+            this.ctx.textBaseline = 'bottom';
+            this.ctx.fillText(signal.yMin, 5, this.canvas.height-(5+20*(signalIndex-1)));
         });
         this.ctx.fillStyle = "#ffffff";
         this.ctx.textAlign = 'end';
@@ -80,20 +99,18 @@ class Oscilloscope {
         this.ctx.textAlign = 'end';
         this.ctx.textBaseline = 'top';
         this.ctx.lineWidth = 2;
-        this.dataPoints.forEach((line, lineIndex) => {
-            if (lineIndex > 0) {
-                if (line.length > 1) {
-                    this.ctx.beginPath();
-                    this.ctx.strokeStyle = this.colors[lineIndex-1];
-                    this.ctx.moveTo(0, this.getYPosition(line[0], this.yMin[lineIndex-1], this.yMax[lineIndex-1]));
-                    for (let i = 1; i < line.length; i++) {
-                        this.ctx.lineTo((this.dataPoints[0][i] - this.dataPoints[0][0])*this.scaleX,
-                                        this.getYPosition(line[i], this.yMin[lineIndex-1], this.yMax[lineIndex-1]));
-                    }
-                    this.ctx.stroke();
-                    this.ctx.fillStyle = this.colors[lineIndex-1];
-                    this.ctx.fillText(`${line[line.length-1].toFixed(1)}`, this.canvas.width-5, 5+20*(lineIndex-1));
+        this.signals.forEach((signal, signalIndex) => {
+            if (signal.length() > 1) {
+                this.ctx.beginPath();
+                this.ctx.strokeStyle = signal.color;
+                this.ctx.moveTo(0, this.getYPosition(signal.valBuffer[0], signal.yMin, signal.yMax));
+                for (let i = 1; i < signal.length(); i++) {
+                    this.ctx.lineTo((signal.tBuffer[i] - signal.tBuffer[0])*this.scaleX,
+                                    this.getYPosition(signal.valBuffer[i], signal.yMin, signal.yMax));
                 }
+                this.ctx.stroke();
+                this.ctx.fillStyle = signal.color;
+                this.ctx.fillText(`${signal.valBuffer[signal.length()-1].toFixed(1)}`, this.canvas.width-5, 5+20*(signalIndex-1));
             }
         });
     }
@@ -111,18 +128,16 @@ class Oscilloscope {
         this.eventSource.onmessage = (event) => {
             try {
                 const values = JSON.parse(event.data);
-                this.dataPoints[0].push(values.time);
-                this.dataPoints[1].push(values.pressure);
-                this.dataPoints[2].push(values.temperature);
-                while (this.dataPoints[0].length > 1) {
-                    if (this.dataPoints[0][this.dataPoints[0].length-2] - this.dataPoints[0][0] > this.timeSpan) {
-                        for (let i = 0; i < this.dataPoints.length; i++) {
-                            this.dataPoints[i].shift();
+                this.signals.forEach((signal, signalIndex) => {
+                    signal.push(values.time, values[signal.name])
+                    while (signal.length() > 1) {
+                        if (signal.tBuffer[signal.length()-2] - signal.tBuffer[0] > this.timeSpan) {
+                            signal.shift();
+                        } else {
+                            break;
                         }
-                    } else {
-                        break;
                     }
-                }
+                });
             } catch (e) {
                 console.error('Erreur lors de l\'analyse des données JSON:', e);
             }
