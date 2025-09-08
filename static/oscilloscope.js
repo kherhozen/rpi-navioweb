@@ -10,11 +10,11 @@ class OscilloscopeSignal {
         this.valBuffer = []
     }
 
-    length() {
+    bufferLength() {
         return this.tBuffer.length;
     }
 
-    push(t, val) {
+    pushVal(t, val) {
         this.tBuffer.push(t);
         this.valBuffer.push(val);
         if (this.tBuffer.length > maxBufferSize) {
@@ -23,7 +23,7 @@ class OscilloscopeSignal {
         }
     }
 
-    shift() {
+    shiftVal() {
         this.tBuffer.shift();
         this.valBuffer.shift();
     }
@@ -100,17 +100,17 @@ class Oscilloscope {
         this.ctx.textBaseline = 'top';
         this.ctx.lineWidth = 2;
         this.signals.forEach((signal, signalIndex) => {
-            if (signal.length() > 1) {
+            if (signal.bufLength() > 1) {
                 this.ctx.beginPath();
                 this.ctx.strokeStyle = signal.color;
                 this.ctx.moveTo(0, this.getYPosition(signal.valBuffer[0], signal.yMin, signal.yMax));
-                for (let i = 1; i < signal.length(); i++) {
+                for (let i = 1; i < signal.bufferLength(); i++) {
                     this.ctx.lineTo((signal.tBuffer[i] - signal.tBuffer[0])*this.scaleX,
                                     this.getYPosition(signal.valBuffer[i], signal.yMin, signal.yMax));
                 }
                 this.ctx.stroke();
                 this.ctx.fillStyle = signal.color;
-                this.ctx.fillText(`${signal.valBuffer[signal.length()-1].toFixed(1)}`, this.canvas.width-5, 5+20*(signalIndex-1));
+                this.ctx.fillText(`${signal.valBuffer[signal.bufferLength()-1].toFixed(1)}`, this.canvas.width-5, 5+20*(signalIndex-1));
             }
         });
     }
@@ -129,10 +129,10 @@ class Oscilloscope {
             try {
                 const values = JSON.parse(event.data);
                 this.signals.forEach((signal, signalIndex) => {
-                    signal.push(values.time, values[signal.name])
-                    while (signal.length() > 1) {
-                        if (signal.tBuffer[signal.length()-2] - signal.tBuffer[0] > this.timeSpan) {
-                            signal.shift();
+                    signal.pushVal(values.time, values[signal.name])
+                    while (signal.bufferLength() > 1) {
+                        if (signal.tBuffer[signal.bufferLength()-2] - signal.tBuffer[0] > this.timeSpan) {
+                            signal.shiftVal();
                         } else {
                             break;
                         }
