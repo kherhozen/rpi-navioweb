@@ -6,6 +6,7 @@ class OscilloscopeSignal {
         this.yMin = yMin
         this.yMax = yMax
         this.color = color
+        this.maxBufferSize = maxBufferSize
         this.tBuffer = []
         this.valBuffer = []
     }
@@ -17,7 +18,7 @@ class OscilloscopeSignal {
     pushVal(t, val) {
         this.tBuffer.push(t);
         this.valBuffer.push(val);
-        if (this.tBuffer.length > maxBufferSize) {
+        if (this.tBuffer.length > this.maxBufferSize) {
             this.tBuffer.shift();
             this.valBuffer.shift();
         }
