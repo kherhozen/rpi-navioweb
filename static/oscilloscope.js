@@ -100,7 +100,7 @@ class Oscilloscope {
         this.ctx.textBaseline = 'top';
         this.ctx.lineWidth = 2;
         this.signals.forEach((signal, signalIndex) => {
-            if (signal.bufLength() > 1) {
+            if (signal.bufferLength() > 1) {
                 this.ctx.beginPath();
                 this.ctx.strokeStyle = signal.color;
                 this.ctx.moveTo(0, this.getYPosition(signal.valBuffer[0], signal.yMin, signal.yMax));
