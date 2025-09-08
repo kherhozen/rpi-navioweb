@@ -79,9 +79,9 @@ class Oscilloscope {
         this.signals.forEach((signal, signalIndex) => {
             this.ctx.fillStyle = signal.color;
             this.ctx.textBaseline = 'top';
-            this.ctx.fillText(signal.yMax, 5, 5+20*(signalIndex-1));
+            this.ctx.fillText(signal.yMax, 5, 5+20*signalIndex);
             this.ctx.textBaseline = 'bottom';
-            this.ctx.fillText(signal.yMin, 5, this.canvas.height-(5+20*(signalIndex-1)));
+            this.ctx.fillText(signal.yMin, 5, this.canvas.height-(5+20*signalIndex));
         });
         this.ctx.fillStyle = "#ffffff";
         this.ctx.textAlign = 'end';
@@ -111,7 +111,7 @@ class Oscilloscope {
                 }
                 this.ctx.stroke();
                 this.ctx.fillStyle = signal.color;
-                this.ctx.fillText(`${signal.valBuffer[signal.bufferLength()-1].toFixed(1)}`, this.canvas.width-5, 5+20*(signalIndex-1));
+                this.ctx.fillText(`${signal.valBuffer[signal.bufferLength()-1].toFixed(1)}`, this.canvas.width-5, 5+20*signalIndex);
             }
         });
     }
