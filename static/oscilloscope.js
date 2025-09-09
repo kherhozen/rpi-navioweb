@@ -6,6 +6,9 @@ class OscilloscopeSignal {
         this.yMin = yMin;
         this.yMax = yMax;
         this.color = color;
+        this.selected = false;
+        this.zoom = 0;
+        this.offset = 0;
         this.maxBufferSize = maxBufferSize;
         this.tBuffer = [];
         this.valBuffer = [];
@@ -48,7 +51,7 @@ class OscilloscopeWheel {
 
 class Oscilloscope {
 
-    constructor(canvasId, title, timeSpan, signals, wheelzoom, wheeloffset) {
+    constructor(canvasId, title, timeSpan, signals, wheelspan, wheelsignal, wheelzoom, wheeloffset) {
         this.canvas = canvasId;
         this.title = title;
         this.ctx = this.canvas.getContext('2d');
@@ -62,6 +65,8 @@ class Oscilloscope {
         this.scaleX = this.canvas.width/this.timeSpan;
         this.eventSource = null;
         this.animate = this.animate.bind(this);
+        this.wheelspan = wheelspan;
+        this.wheelsignal = wheelsignal;
         this.wheelzoom = wheelzoom;
         this.wheeloffset = wheeloffset;
     }
@@ -93,11 +98,15 @@ class Oscilloscope {
 
     drawLabels() {
         this.ctx.textAlign = 'start';
-        this.ctx.font = '14px Arial';
         this.signals.forEach((signal, signalIndex) => {
             this.ctx.fillStyle = signal.color;
             this.ctx.textBaseline = 'top';
             const yView = this.getYView(signal.yMin, signal.yMax)
+            if (signal.selected) {
+                this.ctx.font = 'bold 14px Arial';
+            } else {
+                this.ctx.font = '14px Arial';
+            }
             this.ctx.fillText(`${yView[1].toFixed(3)}`, 5, 5+20*signalIndex);
             this.ctx.textBaseline = 'bottom';
             this.ctx.fillText(`${yView[0].toFixed(3)}`, 5, this.canvas.height-(5+20*signalIndex));
@@ -105,19 +114,20 @@ class Oscilloscope {
         this.ctx.fillStyle = "#ffffff";
         this.ctx.textAlign = 'end';
         this.ctx.textBaseline = 'bottom';
-        this.ctx.fillText(this.timeSpan, this.canvas.width-5, this.canvas.height-5);
+        this.ctx.font = '14px Arial';
+        this.ctx.fillText(`${this.timeSpan}s`, this.canvas.width-5, this.canvas.height-5);
     }
 
-    getYView(yMin, yMax) {
-        const yHeight = yMax-yMin
-        const yHeightZoom = yHeight/(2**(this.wheelzoom.value/5))
+    getYView(signal) {
+        const yHeight = signal.yMax-signal.yMin
+        //////const yHeightZoom = yHeight/(2**(signal.wheelzoom.value/5))
         const yOffset = -yHeightZoom*this.wheeloffset.value/this.numLinesY
         return [yMin+(yHeight-yHeightZoom)/2-yOffset, yMax-(yHeight-yHeightZoom)/2-yOffset]
     }
 
-    getYPosition(value, yMin, yMax) {
-        const yView = this.getYView(yMin, yMax)
-        return this.canvas.height*(1 - (value-yView[0])/(yView[1]-yView[0]));
+    getYPosition(signal, valueIndex) {
+        const yView = this.getYView(signal)
+        return this.canvas.height*(1 - (signal.valBuffer[valueIndex]-yView[0])/(yView[1]-yView[0]));
     };
 
     drawGraph() {
@@ -131,10 +141,10 @@ class Oscilloscope {
             if (signal.bufferLength() > 1) {
                 this.ctx.beginPath();
                 this.ctx.strokeStyle = signal.color;
-                this.ctx.moveTo(0, this.getYPosition(signal.valBuffer[0], signal.yMin, signal.yMax));
+                this.ctx.moveTo(0, this.getYPosition(signal, 0));
                 for (let i = 1; i < signal.bufferLength(); i++) {
                     this.ctx.lineTo((signal.tBuffer[i] - signal.tBuffer[0])*this.scaleX,
-                                    this.getYPosition(signal.valBuffer[i], signal.yMin, signal.yMax));
+                                    this.getYPosition(signal, i));
                 }
                 this.ctx.stroke();
                 this.ctx.fillStyle = signal.color;
