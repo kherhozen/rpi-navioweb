@@ -83,3 +83,17 @@ div {
   background-color: #FFC107; /* Ambre */
   background-image: url('icons8-pause-48.png');
 }
+
+.oscilloscopeWheel {
+    padding: 15px 30px;
+    font-size: 18px;
+    cursor: s-resize;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+.oscilloscopeWheel:hover {
+    background-color: #0056b3;
+}

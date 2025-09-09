@@ -1,14 +1,14 @@
 class OscilloscopeSignal {
 
     constructor(name, unit, yMin, yMax, color, maxBufferSize=10000) {
-        this.name = name
-        this.unit = unit
-        this.yMin = yMin
-        this.yMax = yMax
-        this.color = color
-        this.maxBufferSize = maxBufferSize
-        this.tBuffer = []
-        this.valBuffer = []
+        this.name = name;
+        this.unit = unit;
+        this.yMin = yMin;
+        this.yMax = yMax;
+        this.color = color;
+        this.maxBufferSize = maxBufferSize;
+        this.tBuffer = [];
+        this.valBuffer = [];
     }
 
     bufferLength() {
@@ -30,9 +30,24 @@ class OscilloscopeSignal {
     }
 }
 
+class OscilloscopeWheel {
+
+    constructor(wheelId) {
+        this.wheel = wheelId;
+        this.wheel.addEventListener('wheel', (e) => {
+            if (e.deltaY > 0) {
+                console.log('Impulsion : down');
+            } else if (e.deltaY < 0) {
+                console.log('Impulsion : up');
+            }
+            e.preventDefault();
+        }, { passive: false });
+    }
+}
+
 class Oscilloscope {
 
-    constructor(canvasId, title, timeSpan, signals) {
+    constructor(canvasId, title, timeSpan, signals, wheels) {
         this.canvas = canvasId;
         this.title = title;
         this.ctx = this.canvas.getContext('2d');
@@ -46,6 +61,7 @@ class Oscilloscope {
         this.scaleX = this.canvas.width/this.timeSpan;
         this.eventSource = null;
         this.animate = this.animate.bind(this);
+        this.wheels = wheels
     }
 
     drawGrid() {

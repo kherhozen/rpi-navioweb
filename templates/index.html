@@ -45,12 +45,15 @@
             <div class="icon-play"></div>
             <div class="icon-pause"></div>
         </button>
+        <button id="wheel0" class="oscilloscopeWheel">Tune</button>
     </div>
 
     <script>
+    document.addEventListener('DOMContentLoaded', () => {
         const pressSig = new OscilloscopeSignal("pressure", "mbar", 900, 1100, '#00ff00')
         const tempSig = new OscilloscopeSignal("temperature", "degC", 30, 35, '#ff0000')
-        const baroScope = new Oscilloscope(document.getElementById('oscilloscope'), "Barometer", 20, [pressSig, tempSig])
+        const wheel0 = new OscilloscopeWheel(document.getElementById('wheel0'))
+        const baroScope = new Oscilloscope(document.getElementById('oscilloscope'), "Barometer", 20, [pressSig, tempSig], [wheel0])
         function launchOscilloscope() {
             if (!baroScope.isRunning) {
                 baroScope.startOscilloscope();
@@ -62,6 +65,7 @@
                 document.getElementById("oscilloscope_button").classList.add('play');
             }
         }
+    }
     </script>
 
 </body>
