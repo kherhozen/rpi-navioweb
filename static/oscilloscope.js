@@ -34,11 +34,12 @@ class OscilloscopeWheel {
 
     constructor(wheelId) {
         this.wheel = wheelId;
+        this.value = 0;
         this.wheel.addEventListener('wheel', (e) => {
             if (e.deltaY > 0) {
-                console.log('Impulsion : down');
+                this.value -= 1;
             } else if (e.deltaY < 0) {
-                console.log('Impulsion : up');
+                this.value += 1;
             }
             e.preventDefault();
         }, { passive: false });
@@ -47,7 +48,7 @@ class OscilloscopeWheel {
 
 class Oscilloscope {
 
-    constructor(canvasId, title, timeSpan, signals, wheels) {
+    constructor(canvasId, title, timeSpan, signals, wheelzoom, wheeloffset) {
         this.canvas = canvasId;
         this.title = title;
         this.ctx = this.canvas.getContext('2d');
@@ -61,7 +62,8 @@ class Oscilloscope {
         this.scaleX = this.canvas.width/this.timeSpan;
         this.eventSource = null;
         this.animate = this.animate.bind(this);
-        this.wheels = wheels
+        this.wheelzoom = wheelzoom;
+        this.wheeloffset = wheeloffset;
     }
 
     drawGrid() {
@@ -95,9 +97,10 @@ class Oscilloscope {
         this.signals.forEach((signal, signalIndex) => {
             this.ctx.fillStyle = signal.color;
             this.ctx.textBaseline = 'top';
-            this.ctx.fillText(signal.yMax, 5, 5+20*signalIndex);
+            const yView = this.getYView(signal.yMin, signal.yMax)
+            this.ctx.fillText(yView[1], 5, 5+20*signalIndex);
             this.ctx.textBaseline = 'bottom';
-            this.ctx.fillText(signal.yMin, 5, this.canvas.height-(5+20*signalIndex));
+            this.ctx.fillText(yView[0], 5, this.canvas.height-(5+20*signalIndex));
         });
         this.ctx.fillStyle = "#ffffff";
         this.ctx.textAlign = 'end';
@@ -105,8 +108,15 @@ class Oscilloscope {
         this.ctx.fillText(this.timeSpan, this.canvas.width-5, this.canvas.height-5);
     }
 
+    getYView(yMin, yMax) {
+        const yZoom = (yMax-yMin)/(2**(this.wheelzoom/10))
+        const yOffset = this.wheeloffset*(yMax-yMin)/10
+        return [yMin+yZoom/2-yOffset, yMax-yZoom/2-yOffset]
+    }
+
     getYPosition(value, yMin, yMax) {
-        return this.canvas.height*(1 - (value - yMin)/(yMax - yMin));
+        const yView = this.getYView(yMin, yMax)
+        return this.canvas.height*(1 - (value-yView[0])/(yView[1]-yView[0]));
     };
 
     drawGraph() {

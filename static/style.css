@@ -55,6 +55,14 @@ div {
   justify-content: center;
 }
 
+#oscilloscope-controller {
+  padding: 10px;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
 #oscilloscope {
   background-color: #111;
   display: block;
