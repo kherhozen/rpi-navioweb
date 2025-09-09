@@ -110,8 +110,8 @@ class Oscilloscope {
 
     getYView(yMin, yMax) {
         const yHeight = yMax-yMin
-        const yHeightZoom = yHeight/(2**(this.wheelzoom.value/10))
-        const yOffset = yHeight*this.wheeloffset.value/10
+        const yHeightZoom = yHeight/(2**(this.wheelzoom.value/5))
+        const yOffset = -yHeightZoom*this.wheeloffset.value/this.numLinesY
         return [yMin+(yHeight-yHeightZoom)/2-yOffset, yMax-(yHeight-yHeightZoom)/2-yOffset]
     }
 

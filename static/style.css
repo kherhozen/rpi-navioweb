@@ -93,8 +93,10 @@ div {
 }
 
 .oscilloscope-wheel {
-  padding: 15px 30px;
+  width: 40px;
+  height: 40px;
   font-size: 18px;
+  margin: 0.5rem;
   cursor: s-resize;
   background-color: #007bff;
   color: white;
