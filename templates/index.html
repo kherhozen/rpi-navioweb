@@ -52,7 +52,6 @@
     </div>
 
     <script>
-    document.addEventListener('DOMContentLoaded', () => {
         const pressSig = new OscilloscopeSignal("pressure", "mbar", 900, 1100, '#00ff00')
         const tempSig = new OscilloscopeSignal("temperature", "degC", 30, 35, '#ff0000')
         const wheelzoom = new OscilloscopeWheel(document.getElementById('wheel-zoom'))
@@ -69,7 +68,6 @@
                 document.getElementById("oscilloscope_button").classList.add('play');
             }
         }
-    });
     </script>
 
 </body>
