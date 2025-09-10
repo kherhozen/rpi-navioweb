@@ -39,10 +39,6 @@ body {
   padding: 0.75rem 1.5rem; /* Equivalent to py-3 px-6 */
 }
 
-div {
-  padding: 0.75rem 1.5rem; /* Equivalent to py-3 px-6 */
-}
-
 #oscilloscope-container {
   border: 2px solid #333;
   background-color: #000;
@@ -53,6 +49,25 @@ div {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+
+#oscilloscope-header, #oscilloscope-footer {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.ch-range {
+  width: 40px;
+  height: 20px;
+  color: whitesmoke;
+  border-style: solid;
+  border-width: 1px;
+  margin: 0 2px 0 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 #oscilloscope-controller {
@@ -99,7 +114,6 @@ div {
   margin: 0.5rem;
   cursor: s-resize;
   background-color: #007bff;
-  color: white;
   border: none;
   border-radius: 50%;
   background-repeat: no-repeat;
@@ -111,12 +125,35 @@ div {
   background-color: #0056b3;
 }
 
-.oscilloscope-wheel.zoom {
-  background-image: url('icons8-slider-zoom-30.png');
+.wheel-zoom {
+  background-image: url('icons8-slider-zoomY-30.png');
 }
 
-/* Styles pour l'état Pause */
-.oscilloscope-wheel.offset {
+.wheel-offset {
   background-image: url('icons8-slider-offset-30.png');
 }
 
+.wheel-span {
+  background-image: url('icons8-slider-zoomX-30.png');
+}
+
+.wheel-ch {
+  border-width: 2px;
+  border-style: solid;
+}
+
+.chA-color {
+  border-color: red;
+}
+
+.chB-color {
+  border-color: #00ff00;
+}
+
+.chC-color {
+  border-color: blue;
+}
+
+.chD-color {
+  border-color: yellow;
+}

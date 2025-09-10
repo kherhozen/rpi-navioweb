@@ -7,8 +7,6 @@ class OscilloscopeSignal {
         this.yMax = yMax;
         this.color = color;
         this.selected = false;
-        this.zoom = 0;
-        this.offset = 0;
         this.maxBufferSize = maxBufferSize;
         this.tBuffer = [];
         this.valBuffer = [];
@@ -36,7 +34,7 @@ class OscilloscopeSignal {
 class OscilloscopeWheel {
 
     constructor(wheelId) {
-        this.wheel = wheelId;
+        this.wheel = document.getElementById(wheelId);
         this.value = 0;
         this.wheel.addEventListener('wheel', (e) => {
             if (e.deltaY > 0) {
@@ -49,26 +47,108 @@ class OscilloscopeWheel {
     }
 }
 
+class OscilloscopeChannel {
+
+    constructor(canvasElmt, signal, chMinId, chMaxId, wheelZoom, wheelOffset) {
+        this.canvasElmt = canvasElmt;
+        this.signal = signal;
+        this.chMinElmt = document.getElementById(chMinId);
+        this.chMaxElmt = document.getElementById(chMaxId);
+        this.chMinElmt.innerHTML = '--';
+        this.chMaxElmt.innerHTML = '--';
+        this.wheelZoom = wheelZoom;
+        this.wheelOffset = wheelOffset;
+    }
+
+    getYMinMax() {
+        const yHeight = this.signal.yMax - this.signal.yMin
+        const yHeightZoom = yHeight/(2**(this.wheelZoom.value/5))
+        const yOffset = -yHeightZoom*this.wheelOffset.value/10
+        return [this.signal.yMin+(yHeight-yHeightZoom)/2-yOffset, this.signal.yMax-(yHeight-yHeightZoom)/2-yOffset]
+    }
+
+    getYPosition(valueIndex) {
+        const [yMin, yMax] = this.getYMinMax()
+        return this.canvasElmt.height*(1 - (this.signal.valBuffer[valueIndex]-yMin)/(yMax-yMin));
+    };
+
+    setMinMaxLabels() {
+        if (this.signal !== null) {
+            const [yMin, yMax] = this.getYMinMax()
+            this.chMinElmt.innerHTML = yMin.toFixed(3);
+            this.chMaxElmt.innerHTML = yMax.toFixed(3);
+        }
+    }
+}
+
 class Oscilloscope {
 
-    constructor(canvasId, title, timeSpan, signals, wheelspan, wheelsignal, wheelzoom, wheeloffset) {
-        this.canvas = canvasId;
+    constructor(oscilloscopeId, title, timeSpan, signals) {
+        this.oscilloscopeElement = document.getElementById(oscilloscopeId);
+        this.oscilloscopeElement.innerHTML = 
+            `<div id="oscilloscope-header">
+                <div id="chA-max" class="ch-range chA-color">--</div>
+                <div id="chB-max" class="ch-range chB-color">--</div>
+                <div id="chC-max" class="ch-range chC-color">--</div>
+                <div id="chD-max" class="ch-range chD-color">--</div>
+            </div>
+            <canvas id="oscilloscope-canvas" width="400" height="200"></canvas>
+            <div id="oscilloscope-footer">
+                <div id="chA-min" class="ch-range chA-color">--</div>
+                <div id="chB-min" class="ch-range chB-color">--</div>
+                <div id="chC-min" class="ch-range chC-color">--</div>
+                <div id="chD-min" class="ch-range chD-color">--</div>
+            </div>
+            <div id="oscilloscope-controller">
+                <button id="oscilloscope_play" class="toggle-button play">
+                    <div class="icon-play"></div>
+                    <div class="icon-pause"></div>
+                </button>
+                <button id="wzA" class="oscilloscope-wheel wheel-zoom wheel-ch chA-color">
+                <button id="wzB" class="oscilloscope-wheel wheel-zoom wheel-ch chB-color">
+                <button id="wzC" class="oscilloscope-wheel wheel-zoom wheel-ch chC-color">
+                <button id="wzD" class="oscilloscope-wheel wheel-zoom wheel-ch chD-color">
+            </div>
+            <div id="oscilloscope-controller">
+                <button id="ws" class="oscilloscope-wheel wheel-span">
+                <button id="woA" class="oscilloscope-wheel wheel-offset wheel-ch chA-color">
+                <button id="woB" class="oscilloscope-wheel wheel-offset wheel-ch chB-color">
+                <button id="woC" class="oscilloscope-wheel wheel-offset wheel-ch chC-color">
+                <button id="woD" class="oscilloscope-wheel wheel-offset wheel-ch chD-color">
+            </div>`
+        this.canvas = document.getElementById("oscilloscope-canvas");
         this.title = title;
         this.ctx = this.canvas.getContext('2d');
         this.gridColor = '#333';
         this.numLinesX = 20;
         this.numLinesY = 10;
         this.signals = signals;
+        while (this.signals.length < 4) {
+            this.signals.push(null)
+        }
         this.isRunning = false;
         this.animationFrameId = null;
         this.timeSpan = timeSpan;
         this.scaleX = this.canvas.width/this.timeSpan;
         this.eventSource = null;
         this.animate = this.animate.bind(this);
-        this.wheelspan = wheelspan;
-        this.wheelsignal = wheelsignal;
-        this.wheelzoom = wheelzoom;
-        this.wheeloffset = wheeloffset;
+        this.startOscilloscope = this.startOscilloscope.bind(this);
+        this.stopOscilloscope = this.stopOscilloscope.bind(this);
+        this.launchOscilloscope = this.launchOscilloscope.bind(this);
+        this.wheelsZoom = [new OscilloscopeWheel("wzA"),
+                           new OscilloscopeWheel("wzB"),
+                           new OscilloscopeWheel("wzC"),
+                           new OscilloscopeWheel("wzD")];
+        this.wheelsOffset = [new OscilloscopeWheel("woA"),
+                             new OscilloscopeWheel("woB"),
+                             new OscilloscopeWheel("woC"),
+                             new OscilloscopeWheel("woD")];
+        this.wheelSpan = new OscilloscopeWheel("ws");
+        this.channels = [new OscilloscopeChannel(this.canvas, signals[0], "chA-min", "chA-max", this.wheelsZoom[0], this.wheelsOffset[0]),
+                         new OscilloscopeChannel(this.canvas, signals[1], "chB-min", "chB-max", this.wheelsZoom[1], this.wheelsOffset[1]),
+                         new OscilloscopeChannel(this.canvas, signals[2], "chC-min", "chC-max", this.wheelsZoom[2], this.wheelsOffset[2]),
+                         new OscilloscopeChannel(this.canvas, signals[3], "chD-min", "chD-max", this.wheelsZoom[3], this.wheelsOffset[3])];
+        document.getElementById("oscilloscope_play").addEventListener('click', this.launchOscilloscope)
     }
 
     drawGrid() {
@@ -97,38 +177,15 @@ class Oscilloscope {
     }
 
     drawLabels() {
-        this.ctx.textAlign = 'start';
-        this.signals.forEach((signal, signalIndex) => {
-            this.ctx.fillStyle = signal.color;
-            this.ctx.textBaseline = 'top';
-            const yView = this.getYView(signal.yMin, signal.yMax)
-            if (signal.selected) {
-                this.ctx.font = 'bold 14px Arial';
-            } else {
-                this.ctx.font = '14px Arial';
-            }
-            this.ctx.fillText(`${yView[1].toFixed(3)}`, 5, 5+20*signalIndex);
-            this.ctx.textBaseline = 'bottom';
-            this.ctx.fillText(`${yView[0].toFixed(3)}`, 5, this.canvas.height-(5+20*signalIndex));
-        });
+        for (let i = 0; i < this.signals.length; i++) {
+            this.channels[i].setMinMaxLabels()
+        }
         this.ctx.fillStyle = "#ffffff";
         this.ctx.textAlign = 'end';
         this.ctx.textBaseline = 'bottom';
         this.ctx.font = '14px Arial';
         this.ctx.fillText(`${this.timeSpan}s`, this.canvas.width-5, this.canvas.height-5);
     }
-
-    getYView(signal) {
-        const yHeight = signal.yMax-signal.yMin
-        //////const yHeightZoom = yHeight/(2**(signal.wheelzoom.value/5))
-        const yOffset = -yHeightZoom*this.wheeloffset.value/this.numLinesY
-        return [yMin+(yHeight-yHeightZoom)/2-yOffset, yMax-(yHeight-yHeightZoom)/2-yOffset]
-    }
-
-    getYPosition(signal, valueIndex) {
-        const yView = this.getYView(signal)
-        return this.canvas.height*(1 - (signal.valBuffer[valueIndex]-yView[0])/(yView[1]-yView[0]));
-    };
 
     drawGraph() {
         this.drawGrid();
@@ -141,10 +198,10 @@ class Oscilloscope {
             if (signal.bufferLength() > 1) {
                 this.ctx.beginPath();
                 this.ctx.strokeStyle = signal.color;
-                this.ctx.moveTo(0, this.getYPosition(signal, 0));
+                this.ctx.moveTo(0, this.channels[signalIndex].getYPosition(0));
                 for (let i = 1; i < signal.bufferLength(); i++) {
                     this.ctx.lineTo((signal.tBuffer[i] - signal.tBuffer[0])*this.scaleX,
-                                    this.getYPosition(signal, i));
+                                    tthis.channels[signalIndex].getYPosition(i));
                 }
                 this.ctx.stroke();
                 this.ctx.fillStyle = signal.color;
@@ -195,6 +252,18 @@ class Oscilloscope {
         if (this.eventSource) {
             this.eventSource.close();
             this.eventSource = null;
+        }
+    }
+
+    launchOscilloscope() {
+        if (!this.isRunning) {
+            this.startOscilloscope();
+            document.getElementById("oscilloscope_play").classList.remove('play');
+            document.getElementById("oscilloscope_play").classList.add('pause');
+        } else {
+            this.stopOscilloscope();
+            document.getElementById("oscilloscope_play").classList.remove('pause');
+            document.getElementById("oscilloscope_play").classList.add('play');
         }
     }
 }

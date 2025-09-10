@@ -39,40 +39,16 @@
         ...
     </div>
 
-    <div id="oscilloscope-container">
-        <canvas id="oscilloscope" width="400" height="200"></canvas>
-        <div id="oscilloscope-controller">
-            <button id="oscilloscope_button" class="toggle-button play" onclick="launchOscilloscope()">
-                <div class="icon-play"></div>
-                <div class="icon-pause"></div>
-            </button>
-            <button id="wheel-span" class="oscilloscope-wheel span">
-            <button id="wheel-signal" class="oscilloscope-wheel signalselector">
-            <button id="wheel-zoom" class="oscilloscope-wheel zoom">
-            <button id="wheel-offset" class="oscilloscope-wheel offset">
-        </div>
+    <div id="oscilloscope">
+        <!--filled by oscilloscope.js-->
     </div>
 
     <script>
-        const pressSig = new OscilloscopeSignal("pressure", "mbar", 900, 1100, '#00ff00')
-        const tempSig = new OscilloscopeSignal("temperature", "degC", 30, 35, '#ff0000')
-        const wheelspan = new OscilloscopeWheel(document.getElementById('wheel-span'))
-        const wheelsignal = new OscilloscopeWheel(document.getElementById('wheel-signal'))
-        const wheelzoom = new OscilloscopeWheel(document.getElementById('wheel-zoom'))
-        const wheeloffset = new OscilloscopeWheel(document.getElementById('wheel-offset'))
-        const baroScope = new Oscilloscope(document.getElementById('oscilloscope'), "Barometer", 20, [pressSig, tempSig],
-                                            wheelspan, wheelsignal, wheelzoom, wheeloffset)
-        function launchOscilloscope() {
-            if (!baroScope.isRunning) {
-                baroScope.startOscilloscope();
-                document.getElementById("oscilloscope_button").classList.remove('play');
-                document.getElementById("oscilloscope_button").classList.add('pause');
-            } else {
-                baroScope.stopOscilloscope();
-                document.getElementById("oscilloscope_button").classList.remove('pause');
-                document.getElementById("oscilloscope_button").classList.add('play');
-            }
-        }
+        document.addEventListener('DOMContentLoaded', () => {
+            const pressSig = new OscilloscopeSignal("pressure", "mbar", 900, 1100)
+            const tempSig = new OscilloscopeSignal("temperature", "degC", 30, 35)
+            const baroScope = new Oscilloscope('oscilloscope', "Barometer", 20, [pressSig, tempSig])
+        });
     </script>
 
 </body>
