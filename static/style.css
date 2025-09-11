@@ -39,28 +39,30 @@ body {
   padding: 0.75rem 1.5rem; /* Equivalent to py-3 px-6 */
 }
 
-#oscilloscope-container {
-  border: 2px solid #333;
+.scope-container {
+  width: 400px;
+  aspect-ratio: 1 / 1;
   background-color: #000;
   padding: 10px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-  position: relative;
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
 }
 
-#oscilloscope-header, #oscilloscope-footer {
-  position: relative;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+.scope-screen {
+  width: 100%;
+  height: 50%;
 }
 
-.ch-range {
-  width: 40px;
-  height: 20px;
+.scope-header, .scope-footer {
+  width: 50%;
+  height: 5%;
+  display: flex;
+  margin: 2px 0;
+}
+
+.scope-ch-range {
+  width: 25%;
   color: whitesmoke;
   border-style: solid;
   border-width: 1px;
@@ -68,62 +70,62 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  font: 10px Arial, sans-serif;
 }
 
-#oscilloscope-controller {
-  padding: 10px;
-  position: relative;
+.scope-controller {
+  width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  margin: 2px 0;
 }
 
-#oscilloscope {
-  background-color: #111;
-  display: block;
+.scope-sub-controller {
+  width: 50%;
+  display: flex;
 }
 
-.oscilloscope-button-group {
-  width: 46px;
-  height: 94px;
-  border-radius: 25px;
+.scope-button-group {
+  width: 25%;
+  border-radius: 50%/25%;
   border-style: solid;
-  border-width: 2px;
+  border-width: 1px;
+  margin: 0 2px 0 2px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-around;
 }
 
-.toggle-button {
-  width: 40px;
-  height: 40px;
+.scope-play-button {
+  width: 90%;
+  aspect-ratio: 1;
   border-radius: 50%;
+  margin: 5%;
   border: none;
   cursor: pointer;
-  margin: 3px;
   background-repeat: no-repeat;
   background-size: 60%;
   background-position: center;
 }
 
-/* Styles pour l'état Play (défaut) */
-.toggle-button.play {
+.scope-play-button.play {
   background-color: #4CAF50; /* Vert */
   background-image: url('icons8-play-48.png');
 }
 
-/* Styles pour l'état Pause */
-.toggle-button.pause {
+.scope-play-button.pause {
   background-color: #FFC107; /* Ambre */
   background-image: url('icons8-pause-48.png');
 }
 
-.oscilloscope-wheel {
-  width: 40px;
-  height: 40px;
+.scope-wheel {
+  width: 90%;
+  aspect-ratio: 1;
   cursor: s-resize;
   background-color: #007bff;
+  margin: 5%;
   border: none;
   border-radius: 50%;
   background-repeat: no-repeat;
@@ -131,38 +133,38 @@ body {
   background-position: center;
 }
 
-.oscilloscope-button-group > .oscilloscope-wheel {
-  margin: 3px;
-}
-
-.oscilloscope-wheel:hover {
+.scope-wheel:hover {
   background-color: #0056b3;
 }
 
-.wheel-zoom {
+.scope-wheel-zoom {
   background-image: url('icons8-slider-zoomY-30.png');
 }
 
-.wheel-offset {
+.scope-wheel-offset {
   background-image: url('icons8-slider-offset-30.png');
 }
 
-.wheel-span {
+.scope-wheel-span {
   background-image: url('icons8-slider-zoomX-30.png');
 }
 
-.chA-color {
+.scope-chA-color {
   border-color: red;
 }
 
-.chB-color {
+.scope-chB-color {
   border-color: #00ff00;
 }
 
-.chC-color {
+.scope-chC-color {
   border-color: blue;
 }
 
-.chD-color {
+.scope-chD-color {
   border-color: yellow;
+}
+
+.scope-span-color {
+  border-color: white;
 }

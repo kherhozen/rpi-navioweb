@@ -83,48 +83,49 @@ class OscilloscopeChannel {
 
 class Oscilloscope {
 
-    constructor(oscilloscopeId, title, timeSpan, signals) {
-        this.oscilloscopeElement = document.getElementById(oscilloscopeId);
+    constructor(scopeId, title, timeSpan, signals) {
+        this.oscilloscopeElement = document.getElementById(scopeId);
         this.oscilloscopeElement.innerHTML = 
-            `<div id="oscilloscope-header">
-                <div id="chA-max" class="ch-range chA-color">--</div>
-                <div id="chB-max" class="ch-range chB-color">--</div>
-                <div id="chC-max" class="ch-range chC-color">--</div>
-                <div id="chD-max" class="ch-range chD-color">--</div>
+            `<div class="scope-header">
+                <div id="${scopeId}-chA-max" class="scope-ch-range scope-chA-color">--</div>
+                <div id="${scopeId}-chB-max" class="scope-ch-range scope-chB-color">--</div>
+                <div id="${scopeId}-chC-max" class="scope-ch-range scope-chC-color">--</div>
+                <div id="${scopeId}-chD-max" class="scope-ch-range scope-chD-color">--</div>
             </div>
-            <canvas id="oscilloscope-canvas" width="400" height="200"></canvas>
-            <div id="oscilloscope-footer">
-                <div id="chA-min" class="ch-range chA-color">--</div>
-                <div id="chB-min" class="ch-range chB-color">--</div>
-                <div id="chC-min" class="ch-range chC-color">--</div>
-                <div id="chD-min" class="ch-range chD-color">--</div>
+            <canvas id="${scopeId}-canvas" class="scope-screen"></canvas>
+            <div class="scope-footer">
+                <div id="${scopeId}-chA-min" class="scope-ch-range scope-chA-color">--</div>
+                <div id="${scopeId}-chB-min" class="scope-ch-range scope-chB-color">--</div>
+                <div id="${scopeId}-chC-min" class="scope-ch-range scope-chC-color">--</div>
+                <div id="${scopeId}-chD-min" class="scope-ch-range scope-chD-color">--</div>
             </div>
-            <div id="oscilloscope-controller">
-                <div id="ob1" class="oscilloscope-button-group">
-                    <button id="oscilloscope_play" class="toggle-button play">
-                        <div class="icon-play"></div>
-                        <div class="icon-pause"></div>
-                    </button>
-                    <button id="ws" class="oscilloscope-wheel wheel-span">
+            <div class="scope-controller">
+                <div class="scope-sub-controller">
+                    <div class="scope-button-group scope-chA-color">
+                        <button id="${scopeId}-wzA" class="scope-wheel scope-wheel-zoom">
+                        <button id="${scopeId}-woA" class="scope-wheel scope-wheel-offset">
+                    </div>
+                    <div class="scope-button-group scope-chB-color">
+                        <button id="${scopeId}-wzB" class="scope-wheel scope-wheel-zoom">
+                        <button id="${scopeId}-woB" class="scope-wheel scope-wheel-offset">
+                    </div>
+                    <div class="scope-button-group scope-chC-color">
+                        <button id="${scopeId}-wzC" class="scope-wheel scope-wheel-zoom">
+                        <button id="${scopeId}-woC" class="scope-wheel scope-wheel-offset">
+                    </div>
+                    <div class="scope-button-group scope-chD-color">
+                        <button id="${scopeId}-wzD" class="scope-wheel scope-wheel-zoom">
+                        <button id="${scopeId}-woD" class="scope-wheel scope-wheel-offset">
+                    </div>
                 </div>
-                <div id="ob2" class="oscilloscope-button-group chA-color">
-                    <button id="wzA" class="oscilloscope-wheel wheel-zoom">
-                    <button id="woA" class="oscilloscope-wheel wheel-offset">
-                </div>
-                <div id="ob3" class="oscilloscope-button-group chB-color">
-                    <button id="wzB" class="oscilloscope-wheel wheel-zoom">
-                    <button id="woB" class="oscilloscope-wheel wheel-offset">
-                </div>
-                <div id="ob4" class="oscilloscope-button-group chC-color">
-                    <button id="wzC" class="oscilloscope-wheel wheel-zoom">
-                    <button id="woC" class="oscilloscope-wheel wheel-offset">
-                </div>
-                <div id="ob5" class="oscilloscope-button-group chD-color">
-                    <button id="wzD" class="oscilloscope-wheel wheel-zoom">
-                    <button id="woD" class="oscilloscope-wheel wheel-offset">
+                <div class="scope-sub-controller">
+                    <div class="scope-button-group scope-span-color">
+                        <button id="${scopeId}-play" class="scope-play-button play">
+                        <button id="${scopeId}-ws" class="scope-wheel scope-wheel-span">
+                    </div>
                 </div>
             </div>`
-        this.canvas = document.getElementById("oscilloscope-canvas");
+        this.canvas = document.getElementById(`${scopeId}-canvas`);
         this.title = title;
         this.ctx = this.canvas.getContext('2d');
         this.gridColor = '#333';
@@ -143,20 +144,20 @@ class Oscilloscope {
         this.startOscilloscope = this.startOscilloscope.bind(this);
         this.stopOscilloscope = this.stopOscilloscope.bind(this);
         this.launchOscilloscope = this.launchOscilloscope.bind(this);
-        this.wheelsZoom = [new OscilloscopeWheel("wzA"),
-                           new OscilloscopeWheel("wzB"),
-                           new OscilloscopeWheel("wzC"),
-                           new OscilloscopeWheel("wzD")];
-        this.wheelsOffset = [new OscilloscopeWheel("woA"),
-                             new OscilloscopeWheel("woB"),
-                             new OscilloscopeWheel("woC"),
-                             new OscilloscopeWheel("woD")];
-        this.wheelSpan = new OscilloscopeWheel("ws");
-        this.channels = [new OscilloscopeChannel(this.canvas, signals[0], "chA-min", "chA-max", this.wheelsZoom[0], this.wheelsOffset[0]),
-                         new OscilloscopeChannel(this.canvas, signals[1], "chB-min", "chB-max", this.wheelsZoom[1], this.wheelsOffset[1]),
-                         new OscilloscopeChannel(this.canvas, signals[2], "chC-min", "chC-max", this.wheelsZoom[2], this.wheelsOffset[2]),
-                         new OscilloscopeChannel(this.canvas, signals[3], "chD-min", "chD-max", this.wheelsZoom[3], this.wheelsOffset[3])];
-        document.getElementById("oscilloscope_play").addEventListener('click', this.launchOscilloscope)
+        this.wheelsZoom = [new OscilloscopeWheel(`${scopeId}-wzA`),
+                           new OscilloscopeWheel(`${scopeId}-wzB`),
+                           new OscilloscopeWheel(`${scopeId}-wzC`),
+                           new OscilloscopeWheel(`${scopeId}-wzD`)];
+        this.wheelsOffset = [new OscilloscopeWheel(`${scopeId}-woA`),
+                             new OscilloscopeWheel(`${scopeId}-woB`),
+                             new OscilloscopeWheel(`${scopeId}-woC`),
+                             new OscilloscopeWheel(`${scopeId}-woD`)];
+        this.wheelSpan = new OscilloscopeWheel(`${scopeId}-ws`);
+        this.channels = [new OscilloscopeChannel(this.canvas, signals[0], `${scopeId}-chA-min`, `${scopeId}-chA-max`, this.wheelsZoom[0], this.wheelsOffset[0]),
+                         new OscilloscopeChannel(this.canvas, signals[1], `${scopeId}-chB-min`, `${scopeId}-chB-max`, this.wheelsZoom[1], this.wheelsOffset[1]),
+                         new OscilloscopeChannel(this.canvas, signals[2], `${scopeId}-chC-min`, `${scopeId}-chC-max`, this.wheelsZoom[2], this.wheelsOffset[2]),
+                         new OscilloscopeChannel(this.canvas, signals[3], `${scopeId}-chD-min`, `${scopeId}-chD-max`, this.wheelsZoom[3], this.wheelsOffset[3])];
+        document.getElementById(`${scopeId}-play`).addEventListener('click', this.launchOscilloscope)
     }
 
     drawGrid() {
@@ -227,28 +228,28 @@ class Oscilloscope {
 
     startOscilloscope() {
         this.isRunning = true;
-        this.eventSource = new EventSource('/events');
-        this.eventSource.onmessage = (event) => {
-            try {
-                const values = JSON.parse(event.data);
-                this.signals.forEach((signal, signalIndex) => {
-                    signal.pushVal(values.time, values[signal.name])
-                    while (signal.bufferLength() > 1) {
-                        if (signal.tBuffer[signal.bufferLength()-2] - signal.tBuffer[0] > this.timeSpan) {
-                            signal.shiftVal();
-                        } else {
-                            break;
-                        }
-                    }
-                });
-            } catch (e) {
-                console.error('Erreur lors de l\'analyse des données JSON:', e);
-            }
-        };
-        this.eventSource.onerror = (error) => {
-            console.error('Erreur EventSource:', error);
-            this.stopOscilloscope();
-        };
+        // this.eventSource = new EventSource('/events');
+        // this.eventSource.onmessage = (event) => {
+        //     try {
+        //         const values = JSON.parse(event.data);
+        //         this.signals.forEach((signal, signalIndex) => {
+        //             signal.pushVal(values.time, values[signal.name])
+        //             while (signal.bufferLength() > 1) {
+        //                 if (signal.tBuffer[signal.bufferLength()-2] - signal.tBuffer[0] > this.timeSpan) {
+        //                     signal.shiftVal();
+        //                 } else {
+        //                     break;
+        //                 }
+        //             }
+        //         });
+        //     } catch (e) {
+        //         console.error('Erreur lors de l\'analyse des données JSON:', e);
+        //     }
+        // };
+        // this.eventSource.onerror = (error) => {
+        //     console.error('Erreur EventSource:', error);
+        //     this.stopOscilloscope();
+        // };
         this.animate();
     }
 
