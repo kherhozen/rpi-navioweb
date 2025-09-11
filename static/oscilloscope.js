@@ -100,21 +100,29 @@ class Oscilloscope {
                 <div id="chD-min" class="ch-range chD-color">--</div>
             </div>
             <div id="oscilloscope-controller">
-                <button id="oscilloscope_play" class="toggle-button play">
-                    <div class="icon-play"></div>
-                    <div class="icon-pause"></div>
-                </button>
-                <button id="wzA" class="oscilloscope-wheel wheel-zoom wheel-ch chA-color">
-                <button id="wzB" class="oscilloscope-wheel wheel-zoom wheel-ch chB-color">
-                <button id="wzC" class="oscilloscope-wheel wheel-zoom wheel-ch chC-color">
-                <button id="wzD" class="oscilloscope-wheel wheel-zoom wheel-ch chD-color">
-            </div>
-            <div id="oscilloscope-controller">
-                <button id="ws" class="oscilloscope-wheel wheel-span">
-                <button id="woA" class="oscilloscope-wheel wheel-offset wheel-ch chA-color">
-                <button id="woB" class="oscilloscope-wheel wheel-offset wheel-ch chB-color">
-                <button id="woC" class="oscilloscope-wheel wheel-offset wheel-ch chC-color">
-                <button id="woD" class="oscilloscope-wheel wheel-offset wheel-ch chD-color">
+                <div id="ob1" class="oscilloscope-button-group">
+                    <button id="oscilloscope_play" class="toggle-button play">
+                        <div class="icon-play"></div>
+                        <div class="icon-pause"></div>
+                    </button>
+                    <button id="ws" class="oscilloscope-wheel wheel-span">
+                </div>
+                <div id="ob2" class="oscilloscope-button-group chA-color">
+                    <button id="wzA" class="oscilloscope-wheel wheel-zoom">
+                    <button id="woA" class="oscilloscope-wheel wheel-offset">
+                </div>
+                <div id="ob3" class="oscilloscope-button-group chB-color">
+                    <button id="wzB" class="oscilloscope-wheel wheel-zoom">
+                    <button id="woB" class="oscilloscope-wheel wheel-offset">
+                </div>
+                <div id="ob4" class="oscilloscope-button-group chC-color">
+                    <button id="wzC" class="oscilloscope-wheel wheel-zoom">
+                    <button id="woC" class="oscilloscope-wheel wheel-offset">
+                </div>
+                <div id="ob5" class="oscilloscope-button-group chD-color">
+                    <button id="wzD" class="oscilloscope-wheel wheel-zoom">
+                    <button id="woD" class="oscilloscope-wheel wheel-offset">
+                </div>
             </div>`
         this.canvas = document.getElementById("oscilloscope-canvas");
         this.title = title;

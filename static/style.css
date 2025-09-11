@@ -83,13 +83,25 @@ body {
   display: block;
 }
 
+.oscilloscope-button-group {
+  width: 46px;
+  height: 94px;
+  border-radius: 25px;
+  border-style: solid;
+  border-width: 2px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .toggle-button {
   width: 40px;
   height: 40px;
   border-radius: 50%;
   border: none;
   cursor: pointer;
-  margin: 0.5rem;
+  margin: 3px;
   background-repeat: no-repeat;
   background-size: 60%;
   background-position: center;
@@ -110,8 +122,6 @@ body {
 .oscilloscope-wheel {
   width: 40px;
   height: 40px;
-  font-size: 18px;
-  margin: 0.5rem;
   cursor: s-resize;
   background-color: #007bff;
   border: none;
@@ -119,6 +129,10 @@ body {
   background-repeat: no-repeat;
   background-size: 60%;
   background-position: center;
+}
+
+.oscilloscope-button-group > .oscilloscope-wheel {
+  margin: 3px;
 }
 
 .oscilloscope-wheel:hover {
@@ -135,11 +149,6 @@ body {
 
 .wheel-span {
   background-image: url('icons8-slider-zoomX-30.png');
-}
-
-.wheel-ch {
-  border-width: 2px;
-  border-style: solid;
 }
 
 .chA-color {
