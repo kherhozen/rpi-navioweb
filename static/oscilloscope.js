@@ -47,34 +47,97 @@ class OscilloscopeWheel {
     }
 }
 
+class OscilloscopeChannelRange {
+
+    constructor(chElmtId, updateZoom, updateOffset) {
+        this.chElmt = document.getElementById(chElmtId);
+        this.chElmt_isMouseOver = false;
+        this.updateZoom = updateZoom;
+        this.updateOffset = updateOffset;
+        this.ctrlIsPressed = false;
+        this.chElmt.addEventListener('mouseover', (e) => {
+            this.chElmt_isMouseOver = true;
+            this.manageCursor();
+        });
+        this.chElmt.addEventListener('mouseout', (e) => {
+            this.chElmt_isMouseOver = false;
+            this.manageCursor();
+        });
+        this.chElmt.addEventListener('wheel', (e) => {
+            if (e.ctrlKey) {
+                if (e.deltaY > 0) {
+                    this.updateZoom(-1);
+                } else if (e.deltaY < 0) {
+                    this.updateZoom(1);
+                }
+            } else {
+                if (e.deltaY > 0) {
+                    this.updateOffset(-1);
+                } else if (e.deltaY < 0) {
+                    this.updateOffset(1);
+                }
+            }
+            e.preventDefault();
+        }, { passive: false });
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && !e.repeat) {
+                this.ctrlIsPressed = true;
+                this.manageCursor();
+            }
+        });
+        document.addEventListener('keyup', (e) => {
+            this.ctrlIsPressed = false;
+            this.manageCursor();
+        });
+    }
+
+    manageCursor() {
+        if (this.chElmt_isMouseOver && this.ctrlIsPressed) {
+            this.chElmt.classList.add('hover-with-ctrl');
+        } else {
+            this.chElmt.classList.remove('hover-with-ctrl');
+        }
+    }
+}
+
 class OscilloscopeChannel {
 
-    constructor(canvasElmt, signal, chMinId, chMaxId, wheelZoom, wheelOffset) {
+    constructor(canvasElmt, signal, chMinId, chMaxId) {
         this.canvasElmt = canvasElmt;
         this.signal = signal;
+        this.zoom = 0;
+        this.offset = 0;
         this.chMinElmt = document.getElementById(chMinId);
         this.chMaxElmt = document.getElementById(chMaxId);
-        this.chMinElmt.innerHTML = '--';
-        this.chMaxElmt.innerHTML = '--';
-        this.wheelZoom = wheelZoom;
-        this.wheelOffset = wheelOffset;
+        this.chMinRange = new OscilloscopeChannelRange(chMinId, this.updateZoom.bind(this), this.updateOffset.bind(this));
+        this.chMaxRange = new OscilloscopeChannelRange(chMaxId, this.updateZoom.bind(this), this.updateOffset.bind(this));
+    }
+
+    updateZoom(value) {
+        this.zoom += value;
+        this.setMinMaxLabels();
+    }
+
+    updateOffset(value) {
+        this.offset += value;
+        this.setMinMaxLabels();
     }
 
     getYMinMax() {
-        const yHeight = this.signal.yMax - this.signal.yMin
-        const yHeightZoom = yHeight/(2**(this.wheelZoom.value/5))
-        const yOffset = -yHeightZoom*this.wheelOffset.value/10
-        return [this.signal.yMin+(yHeight-yHeightZoom)/2-yOffset, this.signal.yMax-(yHeight-yHeightZoom)/2-yOffset]
+        const yHeight = this.signal.yMax - this.signal.yMin;
+        const yHeightZoom = yHeight/(2**(this.zoom/5));
+        const yOffset = -yHeightZoom*this.offset/10;
+        return [this.signal.yMin+(yHeight-yHeightZoom)/2-yOffset, this.signal.yMax-(yHeight-yHeightZoom)/2-yOffset];
     }
 
     getYPosition(valueIndex) {
-        const [yMin, yMax] = this.getYMinMax()
+        const [yMin, yMax] = this.getYMinMax();
         return this.canvasElmt.height*(1 - (this.signal.valBuffer[valueIndex]-yMin)/(yMax-yMin));
     };
 
     setMinMaxLabels() {
         if (this.signal !== null) {
-            const [yMin, yMax] = this.getYMinMax()
+            const [yMin, yMax] = this.getYMinMax();
             this.chMinElmt.innerHTML = yMin.toFixed(3);
             this.chMaxElmt.innerHTML = yMax.toFixed(3);
         }
@@ -87,50 +150,28 @@ class Oscilloscope {
         this.oscilloscopeElement = document.getElementById(scopeId);
         this.oscilloscopeElement.innerHTML = 
             `<div class="scope-header">
-                <div id="${scopeId}-chA-max" class="scope-ch-range scope-chA-color">--</div>
-                <div id="${scopeId}-chB-max" class="scope-ch-range scope-chB-color">--</div>
-                <div id="${scopeId}-chC-max" class="scope-ch-range scope-chC-color">--</div>
-                <div id="${scopeId}-chD-max" class="scope-ch-range scope-chD-color">--</div>
+                <div class="scope-sub-header">
+                    <div id="${scopeId}-chA-max" class="scope-ch-range scope-chA-color">--</div>
+                    <div id="${scopeId}-chB-max" class="scope-ch-range scope-chB-color">--</div>
+                    <div id="${scopeId}-chC-max" class="scope-ch-range scope-chC-color">--</div>
+                    <div id="${scopeId}-chD-max" class="scope-ch-range scope-chD-color">--</div>
+                </div>
             </div>
             <canvas id="${scopeId}-canvas" class="scope-screen"></canvas>
             <div class="scope-footer">
-                <div id="${scopeId}-chA-min" class="scope-ch-range scope-chA-color">--</div>
-                <div id="${scopeId}-chB-min" class="scope-ch-range scope-chB-color">--</div>
-                <div id="${scopeId}-chC-min" class="scope-ch-range scope-chC-color">--</div>
-                <div id="${scopeId}-chD-min" class="scope-ch-range scope-chD-color">--</div>
-            </div>
-            <div class="scope-controller">
-                <div class="scope-sub-controller">
-                    <div class="scope-button-group scope-chA-color">
-                        <button id="${scopeId}-wzA" class="scope-wheel scope-wheel-zoom">
-                        <button id="${scopeId}-woA" class="scope-wheel scope-wheel-offset">
-                    </div>
-                    <div class="scope-button-group scope-chB-color">
-                        <button id="${scopeId}-wzB" class="scope-wheel scope-wheel-zoom">
-                        <button id="${scopeId}-woB" class="scope-wheel scope-wheel-offset">
-                    </div>
-                    <div class="scope-button-group scope-chC-color">
-                        <button id="${scopeId}-wzC" class="scope-wheel scope-wheel-zoom">
-                        <button id="${scopeId}-woC" class="scope-wheel scope-wheel-offset">
-                    </div>
-                    <div class="scope-button-group scope-chD-color">
-                        <button id="${scopeId}-wzD" class="scope-wheel scope-wheel-zoom">
-                        <button id="${scopeId}-woD" class="scope-wheel scope-wheel-offset">
-                    </div>
+                <div class="scope-sub-footer">
+                    <div id="${scopeId}-chA-min" class="scope-ch-range scope-chA-color">--</div>
+                    <div id="${scopeId}-chB-min" class="scope-ch-range scope-chB-color">--</div>
+                    <div id="${scopeId}-chC-min" class="scope-ch-range scope-chC-color">--</div>
+                    <div id="${scopeId}-chD-min" class="scope-ch-range scope-chD-color">--</div>
                 </div>
-                <div class="scope-sub-controller">
-                    <div class="scope-button-group scope-span-color">
-                        <button id="${scopeId}-play" class="scope-play-button play">
-                        <button id="${scopeId}-ws" class="scope-wheel scope-wheel-span">
-                    </div>
+                <div class="scope-sub-footer">
+                    <div id="${scopeId}-span" class="scope-ch-range scope-span-color">--</div>
                 </div>
             </div>`
         this.canvas = document.getElementById(`${scopeId}-canvas`);
         this.title = title;
         this.ctx = this.canvas.getContext('2d');
-        this.gridColor = '#333';
-        this.numLinesX = 20;
-        this.numLinesY = 10;
         this.signals = signals;
         while (this.signals.length < 4) {
             this.signals.push(null)
@@ -144,45 +185,14 @@ class Oscilloscope {
         this.startOscilloscope = this.startOscilloscope.bind(this);
         this.stopOscilloscope = this.stopOscilloscope.bind(this);
         this.launchOscilloscope = this.launchOscilloscope.bind(this);
-        this.wheelsZoom = [new OscilloscopeWheel(`${scopeId}-wzA`),
-                           new OscilloscopeWheel(`${scopeId}-wzB`),
-                           new OscilloscopeWheel(`${scopeId}-wzC`),
-                           new OscilloscopeWheel(`${scopeId}-wzD`)];
-        this.wheelsOffset = [new OscilloscopeWheel(`${scopeId}-woA`),
-                             new OscilloscopeWheel(`${scopeId}-woB`),
-                             new OscilloscopeWheel(`${scopeId}-woC`),
-                             new OscilloscopeWheel(`${scopeId}-woD`)];
-        this.wheelSpan = new OscilloscopeWheel(`${scopeId}-ws`);
-        this.channels = [new OscilloscopeChannel(this.canvas, signals[0], `${scopeId}-chA-min`, `${scopeId}-chA-max`, this.wheelsZoom[0], this.wheelsOffset[0]),
-                         new OscilloscopeChannel(this.canvas, signals[1], `${scopeId}-chB-min`, `${scopeId}-chB-max`, this.wheelsZoom[1], this.wheelsOffset[1]),
-                         new OscilloscopeChannel(this.canvas, signals[2], `${scopeId}-chC-min`, `${scopeId}-chC-max`, this.wheelsZoom[2], this.wheelsOffset[2]),
-                         new OscilloscopeChannel(this.canvas, signals[3], `${scopeId}-chD-min`, `${scopeId}-chD-max`, this.wheelsZoom[3], this.wheelsOffset[3])];
-        document.getElementById(`${scopeId}-play`).addEventListener('click', this.launchOscilloscope)
-    }
-
-    drawGrid() {
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.ctx.strokeStyle = this.gridColor;
-
-        for (let i = 0; i <= this.numLinesX; i++) {
-            this.ctx.beginPath();
-            this.ctx.moveTo(i * this.canvas.width / this.numLinesX, 0);
-            this.ctx.lineTo(i * this.canvas.width / this.numLinesX, this.canvas.height);
-            this.ctx.stroke();
+        this.channels = [new OscilloscopeChannel(this.canvas, signals[0], `${scopeId}-chA-min`, `${scopeId}-chA-max`),
+                         new OscilloscopeChannel(this.canvas, signals[1], `${scopeId}-chB-min`, `${scopeId}-chB-max`),
+                         new OscilloscopeChannel(this.canvas, signals[2], `${scopeId}-chC-min`, `${scopeId}-chC-max`),
+                         new OscilloscopeChannel(this.canvas, signals[3], `${scopeId}-chD-min`, `${scopeId}-chD-max`)];
+        // this.launchOscilloscope()
+        for (let i = 0; i < this.channels.length; i++) {
+            this.channels[i].setMinMaxLabels()
         }
-
-        for (let i = 0; i <= this.numLinesY; i++) {
-            this.ctx.beginPath();
-            this.ctx.moveTo(0, i * this.canvas.height / this.numLinesY);
-            this.ctx.lineTo(this.canvas.width, i * this.canvas.height / this.numLinesY);
-            this.ctx.stroke();
-        }
-
-        this.ctx.textAlign = 'center';
-        this.ctx.textBaseline = 'middle';
-        this.ctx.font = '64px Arial';
-        this.ctx.fillStyle = "#555";
-        this.ctx.fillText(this.title, this.canvas.width/2, this.canvas.height/2);
     }
 
     drawLabels() {
@@ -197,7 +207,7 @@ class Oscilloscope {
     }
 
     drawGraph() {
-        this.drawGrid();
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.drawLabels();
         this.ctx.font = '14px Arial';
         this.ctx.textAlign = 'end';
@@ -250,7 +260,7 @@ class Oscilloscope {
         //     console.error('Erreur EventSource:', error);
         //     this.stopOscilloscope();
         // };
-        this.animate();
+        // this.animate();
     }
 
     stopOscilloscope() {
@@ -267,12 +277,12 @@ class Oscilloscope {
     launchOscilloscope() {
         if (!this.isRunning) {
             this.startOscilloscope();
-            document.getElementById("oscilloscope_play").classList.remove('play');
-            document.getElementById("oscilloscope_play").classList.add('pause');
+            // document.getElementById("oscilloscope_play").classList.remove('play');
+            // document.getElementById("oscilloscope_play").classList.add('pause');
         } else {
             this.stopOscilloscope();
-            document.getElementById("oscilloscope_play").classList.remove('pause');
-            document.getElementById("oscilloscope_play").classList.add('play');
+            // document.getElementById("oscilloscope_play").classList.remove('pause');
+            // document.getElementById("oscilloscope_play").classList.add('play');
         }
     }
 }

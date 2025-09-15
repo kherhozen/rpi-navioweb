@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="79.375mm"
+   height="63.5mm"
+   viewBox="0 0 79.374997 63.5"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4.2 (2aeb623e1d, 2025-05-12)"
+   sodipodi:docname="oscillo-screen-300.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="px"
+     showguides="true"
+     inkscape:zoom="1"
+     inkscape:cx="126.5"
+     inkscape:cy="96.5"
+     inkscape:window-width="1882"
+     inkscape:window-height="1011"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1">
+    <linearGradient
+       id="swatch196"
+       inkscape:swatch="solid">
+      <stop
+         style="stop-color:#000000;stop-opacity:1;"
+         offset="0"
+         id="stop196" />
+    </linearGradient>
+    <filter
+       style="color-interpolation-filters:sRGB"
+       inkscape:label="Blur"
+       id="filter202"
+       x="-0.028648421"
+       y="-0.060479995"
+       width="1.0572968"
+       height="1.12096">
+      <feGaussianBlur
+         stdDeviation="1.2001499"
+         result="blur"
+         id="feGaussianBlur202" />
+    </filter>
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:#3b3b3b;fill-opacity:1;stroke-width:0.278393"
+       id="rect1"
+       width="79.375"
+       height="63.5"
+       x="0"
+       y="-2.220446e-16"
+       inkscape:label="Bkgd" />
+    <rect
+       style="mix-blend-mode:normal;fill:#121212;fill-opacity:1;fill-rule:nonzero;stroke-width:0.264583;filter:url(#filter202)"
+       id="rect202"
+       width="100.54166"
+       height="47.625"
+       x="2.6458435"
+       y="2.645834"
+       rx="2.6458333"
+       ry="2.6458333"
+       inkscape:label="BlurBkgd"
+       transform="matrix(0.73622852,0,0,1.200118,0.49422498,-0.6662832)" />
+    <path
+       d="M 0,0 0,63.499998 M 7.9374997,0 l 0,63.499998 M 15.874999,0 l 0,63.499998 M 23.812499,0 l 0,63.499998 M 31.749999,0 l 0,63.499998 M 39.687498,0 l 0,63.499998 M 47.624998,0 l 0,63.499998 M 55.562498,0 l 0,63.499998 M 63.499998,0 l 0,63.499998 M 71.437497,0 l 0,63.499998 M 79.374997,0 l 0,63.499998 M 0,0 79.374997,0 M 0,7.9374997 l 79.374997,0 M 0,15.874999 l 79.374997,0 M 0,23.812499 l 79.374997,0 M 0,31.749999 l 79.374997,0 M 0,39.687498 l 79.374997,0 M 0,47.624998 l 79.374997,0 M 0,55.562498 l 79.374997,0 M 0,63.499998 l 79.374997,0"
+       style="fill:none;stroke:#ffffff;stroke-width:0.26458333;stroke-opacity:1;stroke-dasharray:0.26458333, 1.32291664;stroke-dashoffset:0.10583334"
+       id="path203"
+       inkscape:label="Grid" />
+  </g>
+</svg>
