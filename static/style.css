@@ -70,22 +70,17 @@ body {
 .scope-ch-range {
   width: 45px;
   height: 20px;
+  background-color: #222;
+  padding: 0;
   color: whitesmoke;
   border-style: solid;
   border-width: 1px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  text-align: center;
   font: 10px Arial, sans-serif;
 }
 
 .scope-ch-range:hover {
-  cursor: row-resize;
-  background-color: #555;
-}
-
-.scope-ch-range.hover-with-ctrl {
-  cursor: zoom-in;
+  background-color: #333;
 }
 
 .scope-chA-color {
