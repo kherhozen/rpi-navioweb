@@ -106,7 +106,6 @@ class Oscilloscope {
                 this.timeSpanElmt.blur();
             }
         });
-        this.scaleX = this.canvas.width/this.timeSpanElmt.value;
         this.eventSource = null;
         this.animate = this.animate.bind(this);
         this.startOscilloscope = this.startOscilloscope.bind(this);
@@ -115,32 +114,21 @@ class Oscilloscope {
         // this.launchOscilloscope()
     }
 
-    drawLabels() {
-        for (let i = 0; i < this.signals.length; i++) {
-            this.channels[i].setMinMaxLabels()
-        }
-        this.ctx.fillStyle = "#ffffff";
-        this.ctx.textAlign = 'end';
-        this.ctx.textBaseline = 'bottom';
-        this.ctx.font = '14px Arial';
-        this.ctx.fillText(`${this.timeSpan}s`, this.canvas.width-5, this.canvas.height-5);
-    }
-
     drawGraph() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.drawLabels();
         this.ctx.font = '14px Arial';
         this.ctx.textAlign = 'end';
         this.ctx.textBaseline = 'top';
         this.ctx.lineWidth = 2;
+        const scaleX = this.canvas.width/this.timeSpanElmt.value;
         this.signals.forEach((signal, signalIndex) => {
             if (signal.bufferLength() > 1) {
                 this.ctx.beginPath();
                 this.ctx.strokeStyle = signal.color;
                 this.ctx.moveTo(0, this.channels[signalIndex].getYPosition(0));
                 for (let i = 1; i < signal.bufferLength(); i++) {
-                    this.ctx.lineTo((signal.tBuffer[i] - signal.tBuffer[0])*this.scaleX,
-                                    tthis.channels[signalIndex].getYPosition(i));
+                    this.ctx.lineTo((signal.tBuffer[i] - signal.tBuffer[0])*scaleX,
+                                    this.channels[signalIndex].getYPosition(i));
                 }
                 this.ctx.stroke();
                 this.ctx.fillStyle = signal.color;
