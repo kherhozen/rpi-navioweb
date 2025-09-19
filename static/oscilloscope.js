@@ -64,11 +64,12 @@ class OscilloscopeChannel {
 
 class Oscilloscope {
 
-    constructor(scopeId, title, timeSpan, signals) {
+    constructor(scopeId, title, signals, timeSpan=20) {
         this.oscilloscopeElement = document.getElementById(scopeId);
         this.oscilloscopeElement.innerHTML = 
             `<div class="scope-header">
                 <div id="${scopeId}-sub-header" class="scope-sub-header"></div>
+                <div class"scope-title">${title}</div>
             </div>
             <canvas id="${scopeId}-canvas" class="scope-screen"></canvas>
             <div class="scope-footer">
@@ -78,7 +79,6 @@ class Oscilloscope {
                 </div>
             </div>`
         this.canvas = document.getElementById(`${scopeId}-canvas`);
-        this.title = title;
         this.ctx = this.canvas.getContext('2d');
         this.signals = signals;
         this.channelNames = ['chA', 'chB', 'chC', 'chD'];
