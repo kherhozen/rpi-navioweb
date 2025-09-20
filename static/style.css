@@ -67,6 +67,40 @@ body {
   column-gap: 4px;
 }
 
+.scope-ch-label-name {
+  width: 45px;
+  padding: 1px;
+  text-align: center;
+  font: bold 10px "Courier New", sans-serif;
+}
+
+.scope-ch-label-unit {
+  width: 45px;
+  padding: 1px;
+  text-align: center;
+  font: 10px "Courier New", sans-serif;
+}
+
+.scope-chA-label-color {
+  color: cyan;
+}
+
+.scope-chB-label-color {
+  color: blue;
+}
+
+.scope-chC-label-color {
+  color: fuchsia;
+}
+
+.scope-chD-label-color {
+  color: yellow;
+}
+
+.scope-span-label-color {
+  color: white;
+}
+
 .scope-ch-range {
   width: 45px;
   height: 20px;

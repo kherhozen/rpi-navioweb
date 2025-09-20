@@ -45,8 +45,8 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const pressSig = new OscilloscopeSignal("pressure", "mbar", 900, 1100)
-            const tempSig = new OscilloscopeSignal("temperature", "degC", 30, 35)
+            const pressSig = new OscilloscopeSignal("Ps", "mbar", 900, 1100)
+            const tempSig = new OscilloscopeSignal("OAT", "degC", 30, 35)
             const baroScope = new Oscilloscope('oscilloscope', "Barometer", 20, [pressSig, tempSig])
         });
     </script>

@@ -68,14 +68,30 @@ class Oscilloscope {
         this.oscilloscopeElement = document.getElementById(scopeId);
         this.oscilloscopeElement.innerHTML = 
             `<div class="scope-header">
+<<<<<<< HEAD
                 <div id="${scopeId}-sub-header" class="scope-sub-header"></div>
                 <div class"scope-title">${title}</div>
+=======
+                <div id="${scopeId}-sub-header-hi" class="scope-sub-header"></div>
+                <div class="scope-sub-header">
+                    <div class="scope-ch-label-unit scope-span-label-color">${title}</div>
+                </div>
+            </div>
+            <div class="scope-header">
+                <div id="${scopeId}-sub-header-lo" class="scope-sub-header"></div>
+>>>>>>> 92250c9 (add names and units)
             </div>
             <canvas id="${scopeId}-canvas" class="scope-screen"></canvas>
             <div class="scope-footer">
-                <div id="${scopeId}-sub-footer" class="scope-sub-footer"></div>
+                <div id="${scopeId}-sub-footer-hi" class="scope-sub-footer"></div>
                 <div class="scope-sub-footer">
                     <input onClick="this.select();" type="text" id="${scopeId}-span" class="scope-ch-range scope-span-color">
+                </div>
+            </div>
+            <div class="scope-footer">
+                <div id="${scopeId}-sub-footer-lo" class="scope-sub-footer"></div>
+                <div class="scope-sub-footer">
+                    <div class="scope-ch-label-unit scope-span-label-color">s</div>
                 </div>
             </div>`
         this.canvas = document.getElementById(`${scopeId}-canvas`);
@@ -88,12 +104,20 @@ class Oscilloscope {
             newChannelMin.type = "text";
             newChannelMin.id = `${scopeId}-${this.channelNames[i]}-min`;
             newChannelMin.className = `scope-ch-range scope-${this.channelNames[i]}-color`;
-            document.getElementById(`${scopeId}-sub-footer`).appendChild(newChannelMin);
+            document.getElementById(`${scopeId}-sub-footer-hi`).appendChild(newChannelMin);
+            const newChannelLabelUnit = document.createElement('div');
+            newChannelLabelUnit.innerHTML = this.signals[i].unit;
+            newChannelLabelUnit.className = `scope-ch-label-unit scope-${this.channelNames[i]}-label-color`;
+            document.getElementById(`${scopeId}-sub-footer-lo`).appendChild(newChannelLabelUnit);
+            const newChannelLabelName = document.createElement('div');
+            newChannelLabelName.innerHTML = this.signals[i].name;
+            newChannelLabelName.className = `scope-ch-label-name scope-${this.channelNames[i]}-label-color`;
+            document.getElementById(`${scopeId}-sub-header-hi`).appendChild(newChannelLabelName);
             const newChannelMax = document.createElement('input');
             newChannelMax.type = "text";
             newChannelMax.id = `${scopeId}-${this.channelNames[i]}-max`;
             newChannelMax.className = `scope-ch-range scope-${this.channelNames[i]}-color`;
-            document.getElementById(`${scopeId}-sub-header`).appendChild(newChannelMax);
+            document.getElementById(`${scopeId}-sub-header-lo`).appendChild(newChannelMax);
             this.channels.push(new OscilloscopeChannel(this.canvas, this.signals[i], newChannelMin.id, newChannelMax.id));
         }
         this.isRunning = false;
