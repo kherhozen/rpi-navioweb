@@ -1,7 +1,7 @@
 /* Inter font configuration */
 body {
   font-family: 'Inter', sans-serif;
-  background-color: #f3f4f6; /* Equivalent to bg-gray-100 */
+  background-color: #0b0013; /* Equivalent to bg-gray-100 */
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -41,7 +41,8 @@ body {
 
 .scope-container {
   width: 300px;
-  background-color: #000;
+  background-color: #111;
+  border-radius: 5px;
   padding: 10px;
   display: flex;
   flex-direction: column;
@@ -51,14 +52,19 @@ body {
 .scope-screen {
   width: 100%;
   aspect-ratio: 5/4;
+  margin: 3px 0;
   background-image: url('oscillo-screen-300.svg');
+}
+
+.scope-title {
+  font: bold 14px "Courier New", sans-serif;
+  color: white;
 }
 
 .scope-header, .scope-footer {
   width: 100%;
   display: flex;
   justify-content: space-between;
-  margin: 3px 0;
 }
 
 .scope-sub-header, .scope-sub-footer {
@@ -69,9 +75,10 @@ body {
 
 .scope-ch-label-name {
   width: 45px;
+  height: 14px;
   padding: 1px;
   text-align: center;
-  font: bold 10px "Courier New", sans-serif;
+  font: bold 12px "Courier New", sans-serif;
 }
 
 .scope-ch-label-unit {

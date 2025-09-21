@@ -8,8 +8,6 @@
     <meta http-equiv="Expires" content="0">
     <title>Navio Station</title>
     <link rel="stylesheet" href="../static/style.css">
-    <script src="../static/oscilloscope.js"></script>
-    <script src="../static/led.js"></script>
 </head>
 <body>
     <h1>LED</h1>
@@ -27,12 +25,7 @@
         <label for="pulse">Pulse</label>
     </div>
     <div>
-        <input type="range" id="red" name="red" min="0" max="1" step="0.01" value="0" onchange="confLed()">
-        <label for="red">Red</label><br>
-        <input type="range" id="green" name="green" min="0" max="1" step="0.01" value="1" onchange="confLed()">
-        <label for="green">Green</label><br>
-        <input type="range" id="blue" name="blue" min="0" max="1" step="0.01" value="0" onchange="confLed()">
-        <label for="blue">Blue</label><br>
+        <canvas id="colorPicker" width="100" height="100"></canvas>
     </div>
 
     <div id="output" class="label">
@@ -43,11 +36,13 @@
         <!--filled by oscilloscope.js-->
     </div>
 
-    <script>
+    <script src="../static/oscilloscope.js"></script>
+    <script src="../static/led.js"></script>
+    <script>  
         document.addEventListener('DOMContentLoaded', () => {
             const pressSig = new OscilloscopeSignal("Ps", "mbar", 900, 1100)
             const tempSig = new OscilloscopeSignal("OAT", "degC", 30, 35)
-            const baroScope = new Oscilloscope('oscilloscope', "Barometer", 20, [pressSig, tempSig])
+            const baroScope = new Oscilloscope('oscilloscope', "Barometer", [pressSig, tempSig])
         });
     </script>
 

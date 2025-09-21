@@ -68,18 +68,11 @@ class Oscilloscope {
         this.oscilloscopeElement = document.getElementById(scopeId);
         this.oscilloscopeElement.innerHTML = 
             `<div class="scope-header">
-<<<<<<< HEAD
-                <div id="${scopeId}-sub-header" class="scope-sub-header"></div>
-                <div class"scope-title">${title}</div>
-=======
                 <div id="${scopeId}-sub-header-hi" class="scope-sub-header"></div>
-                <div class="scope-sub-header">
-                    <div class="scope-ch-label-unit scope-span-label-color">${title}</div>
-                </div>
+                <div class="scope-title">${title}</div>
             </div>
             <div class="scope-header">
                 <div id="${scopeId}-sub-header-lo" class="scope-sub-header"></div>
->>>>>>> 92250c9 (add names and units)
             </div>
             <canvas id="${scopeId}-canvas" class="scope-screen"></canvas>
             <div class="scope-footer">
