@@ -18,7 +18,6 @@ def generate_events():
             "pressure": app.baro.baro.get_pressure()
         }
         yield f"data: {json.dumps(data)}\n\n"
-        print("hello")
         time.sleep(0.5)
 
 @app.route('/events')
