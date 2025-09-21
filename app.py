@@ -14,8 +14,8 @@ def generate_events():
     while True:
         data = {
             "time": time.time(),
-            "temperature": app.baro.baro.get_temperature(),
-            "pressure": app.baro.baro.get_pressure()
+            "OAT": app.baro.baro.get_temperature(),
+            "Ps": app.baro.baro.get_pressure()
         }
         yield f"data: {json.dumps(data)}\n\n"
         time.sleep(0.5)
