@@ -43,6 +43,7 @@
             const pressSig = new OscilloscopeSignal("Ps", "mbar", 900, 1100)
             const tempSig = new OscilloscopeSignal("OAT", "degC", 30, 35)
             const baroScope = new Oscilloscope('oscilloscope', "Barometer", [pressSig, tempSig])
+            baroScope.startOscilloscope();
         });
     </script>
 

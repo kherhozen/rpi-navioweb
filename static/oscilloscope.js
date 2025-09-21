@@ -163,29 +163,29 @@ class Oscilloscope {
 
     startOscilloscope() {
         this.isRunning = true;
-        // this.eventSource = new EventSource('/events');
-        // this.eventSource.onmessage = (event) => {
-        //     try {
-        //         const values = JSON.parse(event.data);
-        //         this.signals.forEach((signal, signalIndex) => {
-        //             signal.pushVal(values.time, values[signal.name])
-        //             while (signal.bufferLength() > 1) {
-        //                 if (signal.tBuffer[signal.bufferLength()-2] - signal.tBuffer[0] > this.timeSpan) {
-        //                     signal.shiftVal();
-        //                 } else {
-        //                     break;
-        //                 }
-        //             }
-        //         });
-        //     } catch (e) {
-        //         console.error('Erreur lors de l\'analyse des données JSON:', e);
-        //     }
-        // };
-        // this.eventSource.onerror = (error) => {
-        //     console.error('Erreur EventSource:', error);
-        //     this.stopOscilloscope();
-        // };
-        // this.animate();
+        this.eventSource = new EventSource('/events');
+        this.eventSource.onmessage = (event) => {
+            try {
+                const values = JSON.parse(event.data);
+                this.signals.forEach((signal, signalIndex) => {
+                    signal.pushVal(values.time, values[signal.name])
+                    while (signal.bufferLength() > 1) {
+                        if (signal.tBuffer[signal.bufferLength()-2] - signal.tBuffer[0] > this.timeSpan) {
+                            signal.shiftVal();
+                        } else {
+                            break;
+                        }
+                    }
+                });
+            } catch (e) {
+                console.error('Erreur lors de l\'analyse des données JSON:', e);
+            }
+        };
+        this.eventSource.onerror = (error) => {
+            console.error('Erreur EventSource:', error);
+            this.stopOscilloscope();
+        };
+        this.animate();
     }
 
     stopOscilloscope() {
