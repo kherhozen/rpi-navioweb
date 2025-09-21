@@ -1,12 +1,10 @@
 class OscilloscopeSignal {
 
-    constructor(name, unit, yMin, yMax, color, maxBufferSize=10000) {
+    constructor(name, unit, yMin, yMax, maxBufferSize=10000) {
         this.name = name;
         this.unit = unit;
         this.yMin = yMin;
         this.yMax = yMax;
-        this.color = color;
-        this.selected = false;
         this.maxBufferSize = maxBufferSize;
         this.tBuffer = [];
         this.valBuffer = [];
@@ -91,6 +89,9 @@ class Oscilloscope {
         this.ctx = this.canvas.getContext('2d');
         this.signals = signals;
         this.channelNames = ['chA', 'chB', 'chC', 'chD'];
+        const rs = getComputedStyle(document.querySelector(':root'));
+        this.channelColors = [rs.getPropertyValue('--chA-color'), rs.getPropertyValue('--chB-color'),
+                              rs.getPropertyValue('--chC-color'), rs.getPropertyValue('--chD-color')];
         this.channels = [];
         for (let i = 0; i < this.signals.length && i < 4; i++) {
             const newChannelMin = document.createElement('input');
@@ -141,15 +142,15 @@ class Oscilloscope {
         this.signals.forEach((signal, signalIndex) => {
             if (signal.bufferLength() > 1) {
                 this.ctx.beginPath();
-                this.ctx.strokeStyle = signal.color;
+                this.ctx.strokeStyle = this.channelColors[signalIndex];
                 this.ctx.moveTo(0, this.channels[signalIndex].getYPosition(0));
                 for (let i = 1; i < signal.bufferLength(); i++) {
                     this.ctx.lineTo((signal.tBuffer[i] - signal.tBuffer[0])*scaleX,
                                     this.channels[signalIndex].getYPosition(i));
                 }
                 this.ctx.stroke();
-                // this.ctx.fillStyle = signal.color;
-                // this.ctx.fillText(`${signal.valBuffer[signal.bufferLength()-1].toFixed(1)}${signal.unit}`, this.canvas.width-5, 5+20*signalIndex);
+                this.ctx.fillStyle = signal.color;
+                this.ctx.fillText(`${signal.valBuffer[signal.bufferLength()-1].toFixed(1)}${signal.unit}`, this.canvas.width-5, 5+20*signalIndex);
             }
         });
     }

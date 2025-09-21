@@ -1,3 +1,11 @@
+:root {
+  --chA-color: cyan;
+  --chB-color: blue;
+  --chC-color: fuchsia;
+  --chD-color: yellow;
+  --span-color: white;
+}
+
 /* Inter font configuration */
 body {
   font-family: 'Inter', sans-serif;
@@ -89,23 +97,23 @@ body {
 }
 
 .scope-chA-label-color {
-  color: cyan;
+  color: var(--chA-color);
 }
 
 .scope-chB-label-color {
-  color: blue;
+  color: var(--chB-color);
 }
 
 .scope-chC-label-color {
-  color: fuchsia;
+  color: var(--chC-color);
 }
 
 .scope-chD-label-color {
-  color: yellow;
+  color: var(--chD-color);
 }
 
 .scope-span-label-color {
-  color: white;
+  color: var(--span-color);
 }
 
 .scope-ch-range {
@@ -125,21 +133,21 @@ body {
 }
 
 .scope-chA-color {
-  border-color: cyan;
+  border-color: var(--chA-color);
 }
 
 .scope-chB-color {
-  border-color: blue;
+  border-color: var(--chB-color);
 }
 
 .scope-chC-color {
-  border-color: fuchsia;
+  border-color: var(--chC-color);
 }
 
 .scope-chD-color {
-  border-color: yellow;
+  border-color: var(--chD-color);
 }
 
 .scope-span-color {
-  border-color: white;
+  border-color: var(--span-color);
 }
