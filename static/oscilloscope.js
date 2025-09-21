@@ -148,8 +148,8 @@ class Oscilloscope {
                                     this.channels[signalIndex].getYPosition(i));
                 }
                 this.ctx.stroke();
-                this.ctx.fillStyle = signal.color;
-                this.ctx.fillText(`${signal.valBuffer[signal.bufferLength()-1].toFixed(1)}${signal.unit}`, this.canvas.width-5, 5+20*signalIndex);
+                // this.ctx.fillStyle = signal.color;
+                // this.ctx.fillText(`${signal.valBuffer[signal.bufferLength()-1].toFixed(1)}${signal.unit}`, this.canvas.width-5, 5+20*signalIndex);
             }
         });
     }
