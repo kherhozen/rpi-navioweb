@@ -134,10 +134,10 @@ class Oscilloscope {
 
     drawGraph() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.ctx.font = '14px Arial';
+        this.ctx.font = '12px Courier New';
         this.ctx.textAlign = 'end';
         this.ctx.textBaseline = 'top';
-        this.ctx.lineWidth = 2;
+        this.ctx.lineWidth = 1;
         const scaleX = this.canvas.width/this.timeSpanElmt.value;
         this.signals.forEach((signal, signalIndex) => {
             if (signal.bufferLength() > 1) {
@@ -149,7 +149,7 @@ class Oscilloscope {
                                     this.channels[signalIndex].getYPosition(i));
                 }
                 this.ctx.stroke();
-                this.ctx.fillStyle = signal.color;
+                this.ctx.fillStyle = this.channelColors[signalIndex];
                 this.ctx.fillText(`${signal.valBuffer[signal.bufferLength()-1].toFixed(1)}${signal.unit}`, this.canvas.width-5, 5+20*signalIndex);
             }
         });
@@ -171,7 +171,7 @@ class Oscilloscope {
                 this.signals.forEach((signal, signalIndex) => {
                     signal.pushVal(values.time, values[signal.name])
                     while (signal.bufferLength() > 1) {
-                        if (signal.tBuffer[signal.bufferLength()-2] - signal.tBuffer[0] > this.timeSpan) {
+                        if (signal.tBuffer[signal.bufferLength()-2] - signal.tBuffer[0] > this.timeSpanElmt.value) {
                             signal.shiftVal();
                         } else {
                             break;
