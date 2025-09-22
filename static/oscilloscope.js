@@ -134,9 +134,6 @@ class Oscilloscope {
 
     drawGraph() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.ctx.font = '12px Courier New';
-        this.ctx.textAlign = 'end';
-        this.ctx.textBaseline = 'top';
         this.ctx.lineWidth = 1;
         const scaleX = this.canvas.width/this.timeSpanElmt.value;
         this.signals.forEach((signal, signalIndex) => {
@@ -149,8 +146,6 @@ class Oscilloscope {
                                     this.channels[signalIndex].getYPosition(i));
                 }
                 this.ctx.stroke();
-                this.ctx.fillStyle = this.channelColors[signalIndex];
-                this.ctx.fillText(`${signal.valBuffer[signal.bufferLength()-1].toFixed(1)}${signal.unit}`, this.canvas.width-5, 5+20*signalIndex);
             }
         });
     }
@@ -203,12 +198,12 @@ class Oscilloscope {
     launchOscilloscope() {
         if (!this.isRunning) {
             this.startOscilloscope();
-            // document.getElementById("oscilloscope_play").classList.remove('play');
-            // document.getElementById("oscilloscope_play").classList.add('pause');
+            document.getElementById("oscilloscope_play").classList.remove('play');
+            document.getElementById("oscilloscope_play").classList.add('pause');
         } else {
             this.stopOscilloscope();
-            // document.getElementById("oscilloscope_play").classList.remove('pause');
-            // document.getElementById("oscilloscope_play").classList.add('play');
+            document.getElementById("oscilloscope_play").classList.remove('pause');
+            document.getElementById("oscilloscope_play").classList.add('play');
         }
     }
 }
