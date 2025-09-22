@@ -71,6 +71,9 @@ class Oscilloscope {
             </div>
             <div class="scope-header">
                 <div id="${scopeId}-sub-header-lo" class="scope-sub-header"></div>
+                <div class="scope-sub-header">
+                    <input type="button" id="${scopeId}-play" class="scope-play-button play">
+                </div>
             </div>
             <canvas id="${scopeId}-canvas" class="scope-screen"></canvas>
             <div class="scope-footer">
@@ -129,7 +132,7 @@ class Oscilloscope {
         this.startOscilloscope = this.startOscilloscope.bind(this);
         this.stopOscilloscope = this.stopOscilloscope.bind(this);
         this.launchOscilloscope = this.launchOscilloscope.bind(this);
-        // this.launchOscilloscope()
+        document.getElementById(`${scopeid}-play`).addEventListener('click', this.launchOscilloscope());
     }
 
     drawGraph() {
@@ -198,12 +201,12 @@ class Oscilloscope {
     launchOscilloscope() {
         if (!this.isRunning) {
             this.startOscilloscope();
-            document.getElementById("oscilloscope_play").classList.remove('play');
-            document.getElementById("oscilloscope_play").classList.add('pause');
+            document.getElementById(`${scopeid}-play`).classList.remove('play');
+            document.getElementById(`${scopeid}-play`).classList.add('pause');
         } else {
             this.stopOscilloscope();
-            document.getElementById("oscilloscope_play").classList.remove('pause');
-            document.getElementById("oscilloscope_play").classList.add('play');
+            document.getElementById(`${scopeid}-play`).classList.remove('pause');
+            document.getElementById(`${scopeid}-play`).classList.add('play');
         }
     }
 }
