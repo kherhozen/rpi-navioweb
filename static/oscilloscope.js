@@ -36,26 +36,40 @@ class OscilloscopeChannel {
         this.signal = signal;
         this.chMinElmt = document.getElementById(chMinId);
         this.chMaxElmt = document.getElementById(chMaxId);
-        this.chMinElmt.value = (Math.round(this.signal.yMin*1000)/1000).toString();
-        this.chMaxElmt.value = (Math.round(this.signal.yMax*1000)/1000).toString();
+        this.chMin = (Math.round(this.signal.yMin*1000)/1000).toString();
+        this.chMax = (Math.round(this.signal.yMax*1000)/1000).toString();
+        this.chMinElmt.value = this.chMin;
+        this.chMaxElmt.value = this.chMax;
         this.chMinElmt.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 e.preventDefault();
+                this.chMin = this.chMinElmt.value;
                 this.chMinElmt.blur();
             }
         });
         this.chMaxElmt.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 e.preventDefault();
+                this.chMax = this.chMaxElmt.value;
                 this.chMaxElmt.blur();
             }
-        });        
+        });
+        this.chMinElmt.addEventListener('click', (e) => {
+            e.target.select();
+        });
+        this.chMaxElmt.addEventListener('click', (e) => {
+            e.target.select();
+        });
+        this.chMinElmt.addEventListener('change', (e) => {
+            this.chMin = e.target.value;
+        });
+        this.chMaxElmt.addEventListener('change', (e) => {
+            this.hMax = e.target.value;
+        });
     }
 
     getYPosition(valueIndex) {
-        const yMin = this.chMinElmt.value;
-        const yMax = this.chMaxElmt.value;
-        return this.canvasElmt.height*(1 - (this.signal.valBuffer[valueIndex]-yMin)/(yMax-yMin));
+        return this.canvasElmt.height*(1 - (this.signal.valBuffer[valueIndex]-this.chMin)/(this.chMax-this.chMin));
     }
 
 }
