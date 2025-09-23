@@ -9,7 +9,7 @@
 /* Inter font configuration */
 body {
   font-family: 'Inter', sans-serif;
-  background-color: #0b0013; /* Equivalent to bg-gray-100 */
+  background-color: #0b0013;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -82,7 +82,7 @@ body {
   column-gap: 4px;
 }
 
-.scope-play {
+.scope-play-button {
   width: 45px;
   height: 20px;
   padding: 1px;
@@ -92,11 +92,11 @@ body {
   background-position: center;
 }
 
-.scope-play.play {
+.scope-play-button.play {
   background-image: url('icons8-play-48.png');
 }
 
-.scope-play.pause {
+.scope-play-button.pause {
   background-image: url('icons8-pause-48.png');
 }
 
