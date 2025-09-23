@@ -43,14 +43,14 @@ class OscilloscopeChannel {
         this.chMinElmt.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 e.preventDefault();
-                this.chMin = this.chMinElmt.value;
+                this.chMin = e.target.value;
                 this.chMinElmt.blur();
             }
         });
         this.chMaxElmt.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 e.preventDefault();
-                this.chMax = this.chMaxElmt.value;
+                this.chMax = e.target.value;
                 this.chMaxElmt.blur();
             }
         });
@@ -134,6 +134,7 @@ class Oscilloscope {
         newSpan.type = "text";
         newSpan.id = `${scopeId}-span`;
         newSpan.className = `scope-ch-range scope-span-color`;
+        newSpan.value = this.timeSpan;
         document.getElementById(`${scopeId}-sub-footer-hi-right`).appendChild(newSpan);
         newSpan.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
