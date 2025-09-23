@@ -64,7 +64,7 @@ class OscilloscopeChannel {
             this.chMin = e.target.value;
         });
         this.chMaxElmt.addEventListener('change', (e) => {
-            this.hMax = e.target.value;
+            this.chMax = e.target.value;
         });
     }
 
@@ -89,10 +89,9 @@ class Oscilloscope {
             </div>
             <canvas id="${scopeId}-canvas" class="scope-screen"></canvas>
             <div class="scope-footer">
-                <div id="${scopeId}-sub-footer-hi" class="scope-sub-footer"></div>
-                <div class="scope-sub-footer">
+                <div id="${scopeId}-sub-footer-hi-left" class="scope-sub-footer"></div>
+                <div id="${scopeId}-sub-footer-hi-right" class="scope-sub-footer">
                     <input type="button" id="${scopeId}-play" class="scope-play-button play">
-                    <input onClick="this.select();" type="text" id="${scopeId}-span" class="scope-ch-range scope-span-color">
                 </div>
             </div>
             <div class="scope-footer">
@@ -103,6 +102,7 @@ class Oscilloscope {
             </div>`
         this.canvas = document.getElementById(`${scopeId}-canvas`);
         this.ctx = this.canvas.getContext('2d');
+        this.timeSpan = timeSpan;
         this.signals = signals;
         this.channelNames = ['chA', 'chB', 'chC', 'chD'];
         const rs = getComputedStyle(document.querySelector(':root'));
@@ -114,7 +114,7 @@ class Oscilloscope {
             newChannelMin.type = "text";
             newChannelMin.id = `${scopeId}-${this.channelNames[i]}-min`;
             newChannelMin.className = `scope-ch-range scope-${this.channelNames[i]}-color`;
-            document.getElementById(`${scopeId}-sub-footer-hi`).appendChild(newChannelMin);
+            document.getElementById(`${scopeId}-sub-footer-hi-left`).appendChild(newChannelMin);
             const newChannelLabelUnit = document.createElement('div');
             newChannelLabelUnit.innerHTML = this.signals[i].unit;
             newChannelLabelUnit.className = `scope-ch-label-unit scope-${this.channelNames[i]}-label-color`;
@@ -130,16 +130,27 @@ class Oscilloscope {
             document.getElementById(`${scopeId}-sub-header-lo`).appendChild(newChannelMax);
             this.channels.push(new OscilloscopeChannel(this.canvas, this.signals[i], newChannelMin.id, newChannelMax.id));
         }
-        this.isRunning = false;
-        this.animationFrameId = null;
-        this.timeSpanElmt = document.getElementById(`${scopeId}-span`);
-        this.timeSpanElmt.value = timeSpan;
-        this.timeSpanElmt.addEventListener('keydown', (e) => {
+        const newSpan = document.createElement('input');
+        newSpan.type = "text";
+        newSpan.id = `${scopeId}-span`;
+        newSpan.className = `scope-ch-range scope-span-color`;
+        document.getElementById(`${scopeId}-sub-footer-hi-right`).appendChild(newSpan);
+        newSpan.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 e.preventDefault();
-                this.timeSpanElmt.blur();
+                this.timeSpan = newSpan.value;
+                newSpan.blur();
             }
         });
+        newSpan.addEventListener('click', (e) => {
+            e.target.select();
+        });
+        newSpan.addEventListener('change', (e) => {
+            this.timeSpan = newSpan.value;
+        });
+
+        this.isRunning = false;
+        this.animationFrameId = null;
         this.eventSource = null;
         this.animate = this.animate.bind(this);
         this.startOscilloscope = this.startOscilloscope.bind(this);
