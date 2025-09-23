@@ -51,8 +51,9 @@ body {
 .scope-container {
   width: 300px;
   background-color: #111;
-  border-radius: 5px;
-  padding: 10px;
+  border-radius: 10px;
+  border: solid #aaa 1px;
+  padding: 5px 10px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -83,21 +84,22 @@ body {
 }
 
 .scope-play-button {
-  width: 45px;
-  height: 20px;
-  padding: 1px;
+  width: 47px;
+  height: 22px;
   cursor: pointer;
+  border: none;
+  background-color: transparent;
   background-repeat: no-repeat;
-  background-size: 60%;
+  background-size: auto 60%;
   background-position: center;
 }
 
 .scope-play-button.play {
-  background-image: url('icons8-play-48.png');
+  background-image: url('play-48.svg');
 }
 
 .scope-play-button.pause {
-  background-image: url('icons8-pause-48.png');
+  background-image: url('pause-48.svg');
 }
 
 .scope-ch-label-name {

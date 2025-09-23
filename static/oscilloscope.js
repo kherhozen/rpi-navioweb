@@ -63,6 +63,7 @@ class OscilloscopeChannel {
 class Oscilloscope {
 
     constructor(scopeId, title, signals, timeSpan=20) {
+        this.scopeId = scopeId;
         this.oscilloscopeElement = document.getElementById(scopeId);
         this.oscilloscopeElement.innerHTML = 
             `<div class="scope-header">
@@ -71,14 +72,12 @@ class Oscilloscope {
             </div>
             <div class="scope-header">
                 <div id="${scopeId}-sub-header-lo" class="scope-sub-header"></div>
-                <div class="scope-sub-header">
-                    <input type="button" id="${scopeId}-play" class="scope-play-button play">
-                </div>
             </div>
             <canvas id="${scopeId}-canvas" class="scope-screen"></canvas>
             <div class="scope-footer">
                 <div id="${scopeId}-sub-footer-hi" class="scope-sub-footer"></div>
                 <div class="scope-sub-footer">
+                    <input type="button" id="${scopeId}-play" class="scope-play-button play">
                     <input onClick="this.select();" type="text" id="${scopeId}-span" class="scope-ch-range scope-span-color">
                 </div>
             </div>
@@ -132,7 +131,7 @@ class Oscilloscope {
         this.startOscilloscope = this.startOscilloscope.bind(this);
         this.stopOscilloscope = this.stopOscilloscope.bind(this);
         this.launchOscilloscope = this.launchOscilloscope.bind(this);
-        document.getElementById(`${scopeid}-play`).addEventListener('click', this.launchOscilloscope());
+        document.getElementById(`${scopeId}-play`).addEventListener('click', this.launchOscilloscope);
     }
 
     drawGraph() {
@@ -201,12 +200,12 @@ class Oscilloscope {
     launchOscilloscope() {
         if (!this.isRunning) {
             this.startOscilloscope();
-            document.getElementById(`${scopeid}-play`).classList.remove('play');
-            document.getElementById(`${scopeid}-play`).classList.add('pause');
+            document.getElementById(`${this.scopeId}-play`).classList.remove('play');
+            document.getElementById(`${this.scopeId}-play`).classList.add('pause');
         } else {
             this.stopOscilloscope();
-            document.getElementById(`${scopeid}-play`).classList.remove('pause');
-            document.getElementById(`${scopeid}-play`).classList.add('play');
+            document.getElementById(`${this.scopeId}-play`).classList.remove('pause');
+            document.getElementById(`${this.scopeId}-play`).classList.add('play');
         }
     }
 }
