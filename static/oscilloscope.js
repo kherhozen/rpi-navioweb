@@ -162,7 +162,7 @@ class Oscilloscope {
     drawGraph() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.ctx.lineWidth = 1;
-        const scaleX = this.canvas.width/this.timeSpanElmt.value;
+        const scaleX = this.canvas.width/this.timeSpan;
         this.signals.forEach((signal, signalIndex) => {
             if (signal.bufferLength() > 1) {
                 this.ctx.beginPath();
