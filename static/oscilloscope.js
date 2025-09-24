@@ -194,7 +194,7 @@ class Oscilloscope {
                 this.signals.forEach((signal, signalIndex) => {
                     signal.pushVal(values.time, values[signal.name])
                     while (signal.bufferLength() > 1) {
-                        if (signal.tBuffer[signal.bufferLength()-2] - signal.tBuffer[0] > this.timeSpanElmt.value) {
+                        if (signal.tBuffer[signal.bufferLength()-2] - signal.tBuffer[0] > this.timeSpan) {
                             signal.shiftVal();
                         } else {
                             break;
