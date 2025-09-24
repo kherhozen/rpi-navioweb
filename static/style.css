@@ -93,6 +93,7 @@ h1 {
 .scope-sub-header, .scope-sub-footer {
   display: flex;
   flex-direction: row;
+  align-items: center;
   column-gap: 4px;
 }
 

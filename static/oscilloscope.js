@@ -80,10 +80,13 @@ class Oscilloscope {
         this.scopeId = scopeId;
         this.oscilloscopeElement = document.getElementById(scopeId);
         this.oscilloscopeElement.innerHTML = 
-            `<div class="scope-header">
-                <div id="${scopeId}-sub-header-hi" class="scope-sub-header"></div>
-                <div class="scope-title">${title}</div>
+            `<div id="${scopeId}-header" class="scope-header">
+                <div id="${scopeId}-sub-header-left" class="scope-sub-header"></div>
+                <div id="${scopeId}-sub-header-right" class="scope-sub-header">
+                    <div class="scope-title">${title}</div>
+                </div>
             </div>
+
             <div class="scope-header">
                 <div id="${scopeId}-sub-header-lo" class="scope-sub-header"></div>
             </div>
@@ -110,6 +113,19 @@ class Oscilloscope {
                               rs.getPropertyValue('--chC-color'), rs.getPropertyValue('--chD-color')];
         this.channels = [];
         for (let i = 0; i < this.signals.length && i < 4; i++) {
+            const chHeader = document.createElement('div');
+            chHeader.className = `scope-ch-header`;
+            const chLabelName = document.createElement('div');
+            chLabelName.innerHTML = this.signals[i].name;
+            chLabelName.className = `scope-ch-label-name scope-${this.channelNames[i]}-label-color`;
+            chHeader.appendChild(chLabelName);
+            const chMax = document.createElement('input');
+            chMax.type = "text";
+            chMax.id = `${scopeId}-${this.channelNames[i]}-max`;
+            chMax.className = `scope-ch-range scope-${this.channelNames[i]}-color`;
+            chHeader.appendChild(chMax);
+            document.getElementById(`${scopeId}-sub-header-left`).appendChild(chHeader);
+
             const newChannelMin = document.createElement('input');
             newChannelMin.type = "text";
             newChannelMin.id = `${scopeId}-${this.channelNames[i]}-min`;
@@ -119,16 +135,8 @@ class Oscilloscope {
             newChannelLabelUnit.innerHTML = this.signals[i].unit;
             newChannelLabelUnit.className = `scope-ch-label-unit scope-${this.channelNames[i]}-label-color`;
             document.getElementById(`${scopeId}-sub-footer-lo`).appendChild(newChannelLabelUnit);
-            const newChannelLabelName = document.createElement('div');
-            newChannelLabelName.innerHTML = this.signals[i].name;
-            newChannelLabelName.className = `scope-ch-label-name scope-${this.channelNames[i]}-label-color`;
-            document.getElementById(`${scopeId}-sub-header-hi`).appendChild(newChannelLabelName);
-            const newChannelMax = document.createElement('input');
-            newChannelMax.type = "text";
-            newChannelMax.id = `${scopeId}-${this.channelNames[i]}-max`;
-            newChannelMax.className = `scope-ch-range scope-${this.channelNames[i]}-color`;
-            document.getElementById(`${scopeId}-sub-header-lo`).appendChild(newChannelMax);
-            this.channels.push(new OscilloscopeChannel(this.canvas, this.signals[i], newChannelMin.id, newChannelMax.id));
+            
+            this.channels.push(new OscilloscopeChannel(this.canvas, this.signals[i], newChannelMin.id, chMax.id));
         }
         const newSpan = document.createElement('input');
         newSpan.type = "text";
