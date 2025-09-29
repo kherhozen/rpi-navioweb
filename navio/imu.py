@@ -3,35 +3,40 @@ import time
 import sys
 from mpu9250 import MPU9250
 
-imu = MPU9250()
+class IMUManager:
 
-if imu.testConnection():
-    print("Connection established: True")
-else: 
-    sys.exit("Connection established: False")
+    def __init__(self):
+        self.imu = MPU9250()
+        self.run = False
+        self.t_update = None
+        self.m9a = [0.0, 0.0, 0.0]
+        self.m9g = [0.0, 0.0, 0.0]
+        self.m9m = [0.0, 0.0, 0.0]
 
-imu.initialize()
+        if imu.testConnection():
+            print("Connection established: True")
+        else: 
+            sys.exit("Connection established: False")
 
-time.sleep(1)
+        imu.initialize()
+        time.sleep(1)
 
-while True:
-	# imu.read_all()
-	# imu.read_gyro()
-	# imu.read_acc()
-	# imu.read_temp()
-	# imu.read_mag()
+    def __update(self):
+        while self.run:
+            self.m9a, self.m9g, self.m9m = imu.getMotion9()
+            time.sleep(0.1)
 
-	# print "Accelerometer: ", imu.accelerometer_data
-	# print "Gyroscope:     ", imu.gyroscope_data
-	# print "Temperature:   ", imu.temperature
-	# print "Magnetometer:  ", imu.magnetometer_data
+    def get_data(self):
+        return (self.m9a, self.m9g, self.m9m)
 
-	# time.sleep(0.1)
+    def start(self):
+        if not self.t_update:
+            self.run = True
+            self.t_update = threading.Thread(target=self.__update)
+            self.t_update.start()
 
-	m9a, m9g, m9m = imu.getMotion9()
-
-	print("Acc:", "{:+7.3f}".format(m9a[0]), "{:+7.3f}".format(m9a[1]), "{:+7.3f}".format(m9a[2]))
-	print(" Gyr:", "{:+8.3f}".format(m9g[0]), "{:+8.3f}".format(m9g[1]), "{:+8.3f}".format(m9g[2]))
-	print(" Mag:", "{:+7.3f}".format(m9m[0]), "{:+7.3f}".format(m9m[1]), "{:+7.3f}".format(m9m[2]))
-
-	time.sleep(0.5)
+    def shutdown(self):
+        self.run = False
+        if self.t_update:
+            self.t_update.join()
+            self.t_update = None

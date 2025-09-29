@@ -195,7 +195,7 @@ class Oscilloscope {
 
     startOscilloscope() {
         this.isRunning = true;
-        this.eventSource = new EventSource('/events');
+        this.eventSource = new EventSource('/events-baro');
         this.eventSource.onmessage = (event) => {
             try {
                 const values = JSON.parse(event.data);
