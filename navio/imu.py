@@ -13,17 +13,17 @@ class IMUManager:
         self.m9g = [0.0, 0.0, 0.0]
         self.m9m = [0.0, 0.0, 0.0]
 
-        if imu.testConnection():
+        if self.imu.testConnection():
             print("Connection established: True")
         else: 
             sys.exit("Connection established: False")
 
-        imu.initialize()
+        self.imu.initialize()
         time.sleep(1)
 
     def __update(self):
         while self.run:
-            self.m9a, self.m9g, self.m9m = imu.getMotion9()
+            self.m9a, self.m9g, self.m9m = self.imu.getMotion9()
             time.sleep(0.1)
 
     def get_data(self):
