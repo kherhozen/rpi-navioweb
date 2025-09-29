@@ -4,6 +4,10 @@ import struct
 import array
 
 class MPU9250:
+    """
+    Classe pour l'interface du capteur MPU9250 (Accéléromètre, Gyroscope, Magnétomètre)
+    via SPI, convertie pour Python 3.
+    """
 
     G_SI = 9.80665
     PI = 3.14159
@@ -242,12 +246,14 @@ class MPU9250:
 
     def ReadRegs(self, reg_address, length):
         self.bus.open(self.spi_bus_number, self.spi_dev_number)
+        # En Python 3, la liste doit être initialisée correctement
         tx = [0] * (length + 1)
         tx[0] = reg_address | self.__READ_FLAG
 
         rx = self.bus.xfer2(tx)
 
         self.bus.close()
+        # Retourne les octets de données (sans l'octet de commande)
         return rx[1:len(rx)]
 
 # -----------------------------------------------------------------------------------------------
@@ -258,6 +264,7 @@ class MPU9250:
 
     def testConnection(self):
         response = self.ReadReg(self.__MPUREG_WHOAMI)
+        # Le MPU-9250 devrait répondre avec 0x71
         if (response == 0x71):
             return True
         else:
@@ -266,47 +273,35 @@ class MPU9250:
 # -----------------------------------------------------------------------------------------------
 #                                     INITIALIZATION
 # usage: call this function at startup, giving the sample rate divider (raging from 0 to 255) and
-# low pass filter value; suitable values are:
-# BITS_DLPF_CFG_256HZ_NOLPF2
-# BITS_DLPF_CFG_188HZ
-# BITS_DLPF_CFG_98HZ
-# BITS_DLPF_CFG_42HZ
-# BITS_DLPF_CFG_20HZ
-# BITS_DLPF_CFG_10HZ
-# BITS_DLPF_CFG_5HZ
-# BITS_DLPF_CFG_2100HZ_NOLPF
+# low pass filter value; suitable values are: ...
 # returns 1 if an error occurred
 # -----------------------------------------------------------------------------------------------
 
     def initialize(self, sample_rate_div = 1, low_pass_filter = 0x01):
         MPU_InitRegNum = 17
-        MPU_Init_Data = [[0, 0]] * MPU_InitRegNum
+        # Initialisation correcte d'une liste de listes en Python 3
+        MPU_Init_Data = [[0, 0] for _ in range(MPU_InitRegNum)]
 
         MPU_Init_Data = [
         [0x80, self.__MPUREG_PWR_MGMT_1],   # Reset Device
-        [0x01, self.__MPUREG_PWR_MGMT_1],          # Clock Source
+        [0x01, self.__MPUREG_PWR_MGMT_1],          # Clock Source (PLL with X-axis gyroscope reference)
         [0x00, self.__MPUREG_PWR_MGMT_2],          # Enable Acc & Gyro
         [low_pass_filter, self.__MPUREG_CONFIG],   # Use DLPF set Gyroscope bandwidth 184Hz, temperature bandwidth 188Hz
         [0x18, self.__MPUREG_GYRO_CONFIG],         # +-2000dps
         [0x08, self.__MPUREG_ACCEL_CONFIG],        # +-4G
         [0x09, self.__MPUREG_ACCEL_CONFIG_2],      # Set Acc Data Rates, Enable Acc LPF , Bandwidth 184Hz
-        [0x30, self.__MPUREG_INT_PIN_CFG],
-        #[0x40, self.__MPUREG_I2C_MST_CTRL],       # I2C Speed 348 kHz
-        #[0x20, self.__MPUREG_USER_CTRL],          # Enable AUX
+        [0x30, self.__MPUREG_INT_PIN_CFG],         # Bypass enable and active low
         [0x20, self.__MPUREG_USER_CTRL],           # I2C Master mode
-        [0x0D, self.__MPUREG_I2C_MST_CTRL],        #  I2C configuration multi-master  IIC 400KHz
+        [0x0D, self.__MPUREG_I2C_MST_CTRL],        # I2C configuration multi-master, IIC 400KHz
 
-        [self.__AK8963_I2C_ADDR, self.__MPUREG_I2C_SLV0_ADDR],  #Set the I2C slave addres of AK8963 and set for write.
-        #[0x09, self.__MPUREG_I2C_SLV4_CTRL],
-        #[0x81, self.__MPUREG_I2C_MST_DELAY_CTRL], #Enable I2C delay
-
-        [self.__AK8963_CNTL2, self.__MPUREG_I2C_SLV0_REG], #I2C slave 0 register address from where to begin data transfer
+        [self.__AK8963_I2C_ADDR, self.__MPUREG_I2C_SLV0_ADDR],  # Set the I2C slave addres of AK8963 and set for write.
+        [self.__AK8963_CNTL2, self.__MPUREG_I2C_SLV0_REG], # I2C slave 0 register address from where to begin data transfer (CNTL2)
         [0x01, self.__MPUREG_I2C_SLV0_DO], # Reset AK8963
-        [0x81, self.__MPUREG_I2C_SLV0_CTRL],  #Enable I2C and set 1 byte
+        [0x81, self.__MPUREG_I2C_SLV0_CTRL],  # Enable I2C and set 1 byte
 
-        [self.__AK8963_CNTL1, self.__MPUREG_I2C_SLV0_REG], #I2C slave 0 register address from where to begin data transfer
-        [0x12, self.__MPUREG_I2C_SLV0_DO], # Register value to continuous measurement in 16bit
-        [0x81, self.__MPUREG_I2C_SLV0_CTRL]  #Enable I2C and set 1 byte
+        [self.__AK8963_CNTL1, self.__MPUREG_I2C_SLV0_REG], # I2C slave 0 register address (CNTL1)
+        [0x12, self.__MPUREG_I2C_SLV0_DO], # Register value to continuous measurement in 16bit (Mode 2)
+        [0x81, self.__MPUREG_I2C_SLV0_CTRL]  # Enable I2C and set 1 byte
         ]
 
         for i in range(0, MPU_InitRegNum):
@@ -320,13 +315,6 @@ class MPU9250:
 
 # -----------------------------------------------------------------------------------------------
 #                                 ACCELEROMETER SCALE
-# usage: call this function at startup, after initialization, to set the right range for the
-# accelerometers. Suitable ranges are:
-# BITS_FS_2G
-# BITS_FS_4G
-# BITS_FS_8G
-# BITS_FS_16G
-# returns the range set (2,4,8 or 16)
 # -----------------------------------------------------------------------------------------------
 
     def set_acc_scale(self, scale):
@@ -354,13 +342,6 @@ class MPU9250:
 
 # -----------------------------------------------------------------------------------------------
 #                                 GYROSCOPE SCALE
-# usage: call this function at startup, after initialization, to set the right range for the
-# gyroscopes. Suitable ranges are:
-# BITS_FS_250DPS
-# BITS_FS_500DPS
-# BITS_FS_1000DPS
-# BITS_FS_2000DPS
-# returns the range set (250,500,1000 or 2000)
 # -----------------------------------------------------------------------------------------------
 
     def set_gyro_scale(self, scale):
@@ -388,9 +369,6 @@ class MPU9250:
 
 # -----------------------------------------------------------------------------------------------
 #                                 WHO AM I?
-# usage: call this function to know if SPI is working correctly. It checks the I2C address of the
-# mpu9250 which should be 104 when in SPI mode.
-# returns the I2C address (104)
 # -----------------------------------------------------------------------------------------------
 
     def whoami(self):
@@ -398,25 +376,19 @@ class MPU9250:
 
 # -----------------------------------------------------------------------------------------------
 #                                 READ ACCELEROMETER
-# usage: call this function to read accelerometer data. Axis represents selected axis:
-# 0 -> X axis
-# 1 -> Y axis
-# 2 -> Z axis
 # -----------------------------------------------------------------------------------------------
 
     def read_acc(self):
         response = self.ReadRegs(self.__MPUREG_ACCEL_XOUT_H, 6)
 
         for i in range(0, 3):
+            # Le slicing de liste fonctionne de la même manière en Python 3
             data = self.byte_to_float(response[i*2:i*2+2])
+            # La division standard / donne un flottant en Python 3
             self.accelerometer_data[i] = self.G_SI * data / self.acc_divider
 
 # -----------------------------------------------------------------------------------------------
 #                                 READ GYROSCOPE
-# usage: call this function to read gyroscope data. Axis represents selected axis:
-# 0 -> X axis
-# 1 -> Y axis
-# 2 -> Z axis
 # -----------------------------------------------------------------------------------------------
 
     def read_gyro(self):
@@ -428,24 +400,16 @@ class MPU9250:
 
 # -----------------------------------------------------------------------------------------------
 #                                 READ TEMPERATURE
-# usage: call this function to read temperature data.
-# returns the value in Celsius
 # -----------------------------------------------------------------------------------------------
 
     def read_temp(self):
         response = self.ReadRegs(self.__MPUREG_TEMP_OUT_H, 2)
 
-        #temp = response[0]*256.0 + response[1]
         temp = self.byte_to_float(response)
         self.temperature = (temp/340.0)+36.53
 
 # -----------------------------------------------------------------------------------------------
 #                                 READ ACCELEROMETER CALIBRATION
-# usage: call this function to read accelerometer data. Axis represents selected axis:
-# 0 -> X axis
-# 1 -> Y axis
-# 2 -> Z axis
-# returns Factory Trim value
 # -----------------------------------------------------------------------------------------------
 
     def calib_acc(self):
@@ -454,9 +418,16 @@ class MPU9250:
 
         response = self.ReadRegs(self.__MPUREG_SELF_TEST_X, 4)
 
-        self.calib_data[0] = ((response[0] & 11100000) >> 3) | ((response[3] & 00110000) >> 4)
-        self.calib_data[1] = ((response[1] & 11100000) >> 3) | ((response[3] & 00001100) >> 2)
-        self.calib_data[2] = ((response[2] & 11100000) >> 3) | ((response[3] & 00000011))
+        # ATTENTION: Les nombres octaux (commençant par 0) en Python 2 sont non valides
+        # ou interprétés différemment en Python 3. Ces valeurs sont des masques binaires.
+        # Nous les convertissons en hexadécimal (0xE0, 0x30, 0x0C, 0x03) pour la clarté et la compatibilité.
+
+        # Masking bits 7-5 from response[0] and bits 5-4 from response[3]
+        self.calib_data[0] = ((response[0] & 0xE0) >> 3) | ((response[3] & 0x30) >> 4)
+        # Masking bits 7-5 from response[1] and bits 3-2 from response[3]
+        self.calib_data[1] = ((response[1] & 0xE0) >> 3) | ((response[3] & 0x0C) >> 2)
+        # Masking bits 7-5 from response[2] and bits 1-0 from response[3]
+        self.calib_data[2] = ((response[2] & 0xE0) >> 3) | ((response[3] & 0x03))
 
         self.set_acc_scale(temp_scale)
 
@@ -467,7 +438,6 @@ class MPU9250:
         self.WriteReg(self.__MPUREG_I2C_SLV0_REG, self.__AK8963_WIA) #I2C slave 0 register address from where to begin data transfer
         self.WriteReg(self.__MPUREG_I2C_SLV0_CTRL, 0x81) #Read 1 byte from the magnetometer
 
-        #self.WriteReg(self.__MPUREG_I2C_SLV0_CTRL, 0x81) # Enable I2C and set bytes
         time.sleep(0.01)
 
         return self.ReadReg(self.__MPUREG_EXT_SENS_DATA_00) # Read I2C
@@ -570,6 +540,7 @@ class MPU9250:
 # -----------------------------------------------------------------------------------------------
 
     def byte_to_float(self, input_buffer):
+        # Utilise ">h" (big-endian signed short)
         byte_array = array.array("B", input_buffer)
         signed_16_bit_int, = struct.unpack(">h", byte_array)
         return float(signed_16_bit_int)
@@ -577,9 +548,7 @@ class MPU9250:
 # -----------------------------------------------------------------------------------------------
 
     def byte_to_float_le(self, input_buffer):
+        # Utilise "<h" (little-endian signed short)
         byte_array = array.array("B", input_buffer)
         signed_16_bit_int, = struct.unpack("<h", byte_array)
         return float(signed_16_bit_int)
-
-
-
