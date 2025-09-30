@@ -207,6 +207,10 @@ class MPU9250:
         self.bus = spidev.SpiDev()
         self.spi_bus_number = spi_bus_number
         self.spi_dev_number = spi_dev_number
+        try:
+            self.bus.open(self.spi_bus_number, self.spi_dev_number)
+        except Exception as e:
+            print(f"Erreur d'ouverture du bus SPI: {e}")
         self.gyro_divider = 0.0
         self.acc_divider = 0.0
         self.calib_data = [0.0, 0.0, 0.0]
@@ -216,38 +220,30 @@ class MPU9250:
         self.accelerometer_data = [0.0, 0.0, 0.0]
         self.magnetometer_data = [0.0, 0.0, 0.0]
 
+    def __del__(self):
+        if hasattr(self, 'bus'):
+            self.bus.close()
+
 # -----------------------------------------------------------------------------------------------
 #                                     REGISTER READ & WRITE
 # usage: use these methods to read and write MPU9250 registers over SPI
 # -----------------------------------------------------------------------------------------------
 
     def WriteReg(self, reg_address, data):
-        self.bus.open(self.spi_bus_number, self.spi_dev_number)
-        tx = [reg_address, data]
-        rx = self.bus.xfer2(tx)
-        self.bus.close()
-        return rx
+        return self.bus.xfer2([reg_address, data])
 
 # -----------------------------------------------------------------------------------------------
 
     def ReadReg(self, reg_address):
-        self.bus.open(self.spi_bus_number, self.spi_dev_number)
-        tx = [reg_address | self.__READ_FLAG, 0x00]
-        rx = self.bus.xfer2(tx)
-        self.bus.close()
+        rx = self.bus.xfer2([reg_address | self.__READ_FLAG, 0x00])
         return rx[1]
 
 # -----------------------------------------------------------------------------------------------
 
     def ReadRegs(self, reg_address, length):
-        self.bus.open(self.spi_bus_number, self.spi_dev_number)
-        # En Python 3, la liste doit être initialisée correctement
         tx = [0] * (length + 1)
         tx[0] = reg_address | self.__READ_FLAG
-
         rx = self.bus.xfer2(tx)
-
-        self.bus.close()
         # Retourne les octets de données (sans l'octet de commande)
         return rx[1:len(rx)]
 
@@ -258,13 +254,7 @@ class MPU9250:
 # -----------------------------------------------------------------------------------------------
 
     def testConnection(self):
-        response = self.ReadReg(self.__MPUREG_WHOAMI)
-        # Le MPU-9250 devrait répondre avec 0x71
-        print(response)
-        if (response == 0x71):
-            return True
-        else:
-            return False
+        return self.ReadReg(self.__MPUREG_WHOAMI) == 0x71
 
 # -----------------------------------------------------------------------------------------------
 #                                     INITIALIZATION
