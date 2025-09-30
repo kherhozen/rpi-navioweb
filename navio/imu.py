@@ -1,6 +1,6 @@
-import spidev
 import time
 import sys
+import threading
 from navio.mpu9250 import MPU9250
 
 class IMUManager:
