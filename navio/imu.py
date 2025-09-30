@@ -15,11 +15,10 @@ class IMUManager:
 
         if self.imu.testConnection():
             print("Connection established: True")
+            self.imu.initialize()
+            time.sleep(1)
         else: 
-            sys.exit("Connection established: False")
-
-        self.imu.initialize()
-        time.sleep(1)
+            print("Connection established: False")
 
     def __update(self):
         while self.run:
