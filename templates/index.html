@@ -9,6 +9,7 @@
     <title>Navio Station</title>
     <link rel="stylesheet" href="../static/style.css">
     <script src="../static/oscilloscope.js"></script>
+    <script src="../static/imu.js"></script>
 </head>
 <body>
     <h1>LED</h1>
@@ -44,7 +45,6 @@
     </div>
 
     <script src="../static/led.js"></script>
-    <script src="../static/imu.js"></script>
     <script>  
         document.addEventListener('DOMContentLoaded', () => {
             const pressSig = new OscilloscopeSignal("Ps", "mbar", 900, 1100)

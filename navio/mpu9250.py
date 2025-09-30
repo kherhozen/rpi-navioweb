@@ -275,8 +275,6 @@ class MPU9250:
 
     def initialize(self, sample_rate_div = 1, low_pass_filter = 0x01):
         MPU_InitRegNum = 17
-        # Initialisation correcte d'une liste de listes en Python 3
-        MPU_Init_Data = [[0, 0] for _ in range(MPU_InitRegNum)]
 
         MPU_Init_Data = [
         [0x80, self.__MPUREG_PWR_MGMT_1],   # Reset Device
