@@ -81,4 +81,4 @@ if __name__ == '__main__':
     app.baro.start()
     app.imu = navio_imu.IMUManager()
     app.imu.start()
-    app.run(debug=True, host='0.0.0.0')
+    app.run(debug=True, host='0.0.0.0', use_reloader=False)
