@@ -231,7 +231,7 @@ class MPU9250:
 # -----------------------------------------------------------------------------------------------
 
     def ReadReg(self, reg_address):
-        print(self.bus.open(self.spi_bus_number, self.spi_dev_number))
+        self.bus.open(self.spi_bus_number, self.spi_dev_number)
         tx = [reg_address | self.__READ_FLAG, 0x00]
         rx = self.bus.xfer2(tx)
         self.bus.close()

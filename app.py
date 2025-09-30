@@ -11,7 +11,7 @@ app.runled = False
 app.baro = navio_baro.BarometerManager()
 app.baro.start()
 app.imu = navio_imu.IMUManager()
-app.imu.start()
+# app.imu.start()
 
 def generate_events_baro():
     while True:
