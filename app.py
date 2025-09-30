@@ -18,14 +18,13 @@ def generate_events_baro():
         data = {
             "time": time.time(),
             "OAT": app.baro.baro.get_temperature(),
-            "Ps": app.baro.baro.get_pressure(),
-            "IMU": app.imu.get_data_str()
+            "Ps": app.baro.baro.get_pressure()
         }
         yield f"data: {json.dumps(data)}\n\n"
         time.sleep(0.5)
 
 @app.route('/events-baro')
-def events():
+def events_baro():
     return Response(generate_events_baro(), mimetype="text/event-stream")
 
 def generate_events_imu():
@@ -47,7 +46,7 @@ def generate_events_imu():
         time.sleep(0.1)
 
 @app.route('/events-imu')
-def events():
+def events_imu():
     return Response(generate_events_imu(), mimetype="text/event-stream")
 
 @app.route('/')
