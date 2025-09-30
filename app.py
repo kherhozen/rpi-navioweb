@@ -6,12 +6,6 @@ import navio.imu as navio_imu
 import time
 
 app = Flask(__name__)
-app.led = navio_led.NavioLEDManager()
-app.runled = False
-app.baro = navio_baro.BarometerManager()
-app.baro.start()
-app.imu = navio_imu.IMUManager()
-app.imu.start()
 
 def generate_events_baro():
     while True:
@@ -81,4 +75,10 @@ def confled():
         return jsonify({"error": "Request body must be JSON"}), 400
 
 if __name__ == '__main__':
+    app.led = navio_led.NavioLEDManager()
+    app.runled = False
+    app.baro = navio_baro.BarometerManager()
+    app.baro.start()
+    app.imu = navio_imu.IMUManager()
+    app.imu.start()
     app.run(debug=True, host='0.0.0.0')
