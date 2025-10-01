@@ -47,9 +47,11 @@
     <script src="../static/led.js"></script>
     <script>  
         document.addEventListener('DOMContentLoaded', () => {
-            const pressSig = new OscilloscopeSignal("Ps", "mbar", 900, 1100)
-            const tempSig = new OscilloscopeSignal("OAT", "degC", 30, 35)
-            const baroScope = new Oscilloscope('oscilloscope', "Barometer", [pressSig, tempSig])
+            const pressSig = new OscilloscopeSignal("Ps", "mbar", 900, 1100);
+            const tempSig = new OscilloscopeSignal("OAT", "degC", 30, 35);
+            const baroScope = new Oscilloscope('oscilloscope', "Barometer", [pressSig, tempSig]);
+            const imu = new IMUDisp('imu');
+            imu.start();
         });
     </script>
 
