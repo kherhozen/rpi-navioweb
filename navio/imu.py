@@ -35,6 +35,8 @@ class IMUManager:
             self.t_update.start()
 
     def shutdown(self):
+        if self.imu.bus:
+            self.imu.bus.close()
         self.run = False
         if self.t_update:
             self.t_update.join()

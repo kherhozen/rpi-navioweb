@@ -22,7 +22,7 @@ def events_baro():
     return Response(generate_events_baro(), mimetype="text/event-stream")
 
 def generate_events_imu():
-    while True:
+    for i in range(100):
         raw_data = app.imu.get_data()
         data = {
             "time": time.time(),
@@ -38,6 +38,7 @@ def generate_events_imu():
         }
         yield f"data: {json.dumps(data)}\n\n"
         time.sleep(0.1)
+    app.imu.shutdown()
 
 @app.route('/events-imu')
 def events_imu():
