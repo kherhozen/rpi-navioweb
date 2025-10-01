@@ -13,7 +13,7 @@ class IMUDisp {
         this.eventSource = new EventSource('/events-imu');
         this.eventSource.onmessage = (event) => {
             try {
-                document.getElementById(this.imuId).innerHtml = event.data;
+                document.getElementById(this.imuId).innerHTML = event.data;
             } catch (e) {
                 console.error('Erreur lors de l\'analyse des données JSON:', e);
             }
