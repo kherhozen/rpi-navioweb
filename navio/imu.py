@@ -3,7 +3,7 @@ import threading
 from navio.mpu9250 import MPU9250
 import numpy as np
 from ahrs.filters import Madgwick
-from ahrs.common.orientation import q_to_rpy # Pour convertir le quaternion en angles
+from ahrs.utils.wmm import to_euler
 
 class IMUManager:
 
@@ -39,7 +39,7 @@ class IMUManager:
         while self.run:
             self.m9a, self.m9g, self.m9m = self.imu.getMotion9()
             self.q = self.madgwick.update(self.q, self.m9g, self.m9a, self.m9m)
-            self.att = np.degrees(q_to_rpy(self.q))
+            self.att = np.degrees(to_euler(self.q, representation='rpy'))
             time.sleep(self.__DT)
 
     def get_data(self):
