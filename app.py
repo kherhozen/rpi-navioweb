@@ -23,7 +23,6 @@ def events_baro():
 
 def generate_events_imu():
     while True:
-        print('hello')
         raw_data = app.imu.get_data()
         data = {
             "time": time.time(),
