@@ -20,9 +20,9 @@ class IMUManager:
         self.m9g = [0.0, 0.0, 0.0]
         self.m9m = [0.0, 0.0, 0.0]
         self.madgwick = Madgwick(
-            gyr=np.array(self.m9a),
-            acc=np.array(self.m9g),
-            mag=np.array(self.m9m),
+            gyr=np.array([self.m9a]),
+            acc=np.array([self.m9g]),
+            mag=np.array([self.m9m]),
             frequency=self.__SAMPLE_RATE,
             beta=self.__BETA
         )
@@ -38,7 +38,7 @@ class IMUManager:
     def __update(self):
         while self.run:
             self.m9a, self.m9g, self.m9m = self.imu.getMotion9()
-            self.q = self.madgwick.update(self.q, np.array(self.m9g), np.array(self.m9a), np.array(self.m9m))
+            self.q = self.madgwick.update(self.q, np.array([self.m9g]), np.array([self.m9a]), np.array([self.m9m]))
             self.att = q2rpy(self.q, in_deg=True)
             time.sleep(self.__DT)
 
