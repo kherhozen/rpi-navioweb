@@ -190,3 +190,42 @@ h1 {
 .scope-span-color {
   border-color: var(--span-color);
 }
+
+.matrix-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); 
+  gap: 10px;
+  max-width: 400px;
+  padding: 15px;
+  background-color: #111;
+  border-radius: 10px;
+  border: solid #aaa 1px;
+}
+
+/* Styles pour chaque cellule de la matrice */
+.matrix-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  border: solid #aaa 1px;
+  background-color: #222;
+  border-radius: 5px;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Styles pour l'étiquette (label) */
+.label {
+  font-size: 0.9em;
+  color: white;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+/* Styles pour la valeur */
+.value {
+  font-size: 1.2em;
+  color: #007bff;
+  font-weight: bold;
+}
