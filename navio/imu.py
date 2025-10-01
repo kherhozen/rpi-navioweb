@@ -9,7 +9,7 @@ class IMUManager:
 
     __SAMPLE_RATE = 100  # IMU reading rate
     __DT = 1.0/__SAMPLE_RATE
-    __BETA = 0.04 
+    __BETA = 0.1
 
     def __init__(self):
         
