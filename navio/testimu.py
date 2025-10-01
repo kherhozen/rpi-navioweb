@@ -8,7 +8,7 @@ READ_FLAG = 0x80     # Le bit 7 (MSB) doit être mis à 1 pour une opération de
 
 # Configuration SPI
 BUS = 0     # Bus SPI (souvent 0 ou 1 sur Raspberry Pi)
-DEVICE = 0  # Chip Select (CS) (souvent 0 ou 1)
+DEVICE = 1  # Chip Select (CS) (souvent 0 ou 1)
 # NOTE: Le MPU9250 supporte des vitesses SPI jusqu'à 1MHz pour tous les registres
 # et jusqu'à 20MHz pour les registres de données et d'interruption.
 
