@@ -9,7 +9,6 @@ class IMUDisp {
 
     start() {
         this.isRunning = true;
-        console.log('hello')
         this.eventSource = new EventSource('/events-imu');
         this.eventSource.onmessage = (event) => {
             try {
