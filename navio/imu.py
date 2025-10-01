@@ -3,7 +3,7 @@ import threading
 from navio.mpu9250 import MPU9250
 import numpy as np
 from ahrs.filters import Madgwick
-from ahrs.utils.wmm import to_euler
+from ahrs.utils import to_euler
 
 class IMUManager:
 
