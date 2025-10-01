@@ -36,6 +36,7 @@ def generate_events_imu():
             "my": raw_data[2][1],
             "mz": raw_data[2][2]
         }
+        print(f"data: {json.dumps(data)}\n\n")
         yield f"data: {json.dumps(data)}\n\n"
         time.sleep(0.1)
 
