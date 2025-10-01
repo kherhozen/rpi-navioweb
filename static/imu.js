@@ -3,6 +3,8 @@ class IMUDisp {
     constructor(imuId) {
         this.isRunning = false;
         this.imuId = imuId;
+        this.start = this.start.bind(this);
+        this.stop = this.stop.bind(this);
     }
 
     start() {
