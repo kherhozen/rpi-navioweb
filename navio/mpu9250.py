@@ -206,11 +206,9 @@ class MPU9250:
     def __init__(self, spi_bus_number = 0, spi_dev_number = 1):
         self.bus = spidev.SpiDev()
         self.spi_bus_number = spi_bus_number
-        self.spi_dev_number = spi_dev_number
-        try:
-            self.bus.open(self.spi_bus_number, self.spi_dev_number)
-        except Exception as e:
-            print(f"Erreur d'ouverture du bus SPI: {e}")
+        self.spi_dev_number = spi_dev_number          
+        self.bus.max_speed_hz = 1000000  # Vitesse max à 1 MHz (sûr pour tous les registres)
+        self.bus.mode = 0b00             # Mode SPI 0 (CPOL=0, CPHA=0) pour le MPU9250
         self.gyro_divider = 0.0
         self.acc_divider = 0.0
         self.calib_data = [0.0, 0.0, 0.0]
@@ -219,10 +217,6 @@ class MPU9250:
         self.gyroscope_data = [0.0, 0.0, 0.0]
         self.accelerometer_data = [0.0, 0.0, 0.0]
         self.magnetometer_data = [0.0, 0.0, 0.0]
-
-    def __del__(self):
-        if hasattr(self, 'bus'):
-            self.bus.close()
 
 # -----------------------------------------------------------------------------------------------
 #                                     REGISTER READ & WRITE
@@ -235,7 +229,9 @@ class MPU9250:
 # -----------------------------------------------------------------------------------------------
 
     def ReadReg(self, reg_address):
+        self.bus.open(self.spi_bus_number, self.spi_dev_number)
         rx = self.bus.xfer2([reg_address | self.__READ_FLAG, 0x00])
+        self.bus.close()
         return rx[1]
 
 # -----------------------------------------------------------------------------------------------
