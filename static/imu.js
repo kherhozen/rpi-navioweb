@@ -1,7 +1,7 @@
 const imuEventSource = new EventSource('/events-imu');
 imuEventSource.onmessage = (event) => {
     try {
-        imuEventSource.innerHtml = event.data;
+        document.getElementById('imu').innerHtml = event.data;
     } catch (e) {
         console.error('Erreur lors de l\'analyse des données JSON:', e);
     }
