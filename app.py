@@ -34,7 +34,10 @@ def generate_events_imu():
             "gz": raw_data[1][2],
             "mx": raw_data[2][0],
             "my": raw_data[2][1],
-            "mz": raw_data[2][2]
+            "mz": raw_data[2][2],
+            "roll": raw_data[3][0],
+            "pitch": raw_data[3][1],
+            "yaw": raw_data[3][2]
         }
         yield f"data: {json.dumps(data)}\n\n"
         time.sleep(0.1)

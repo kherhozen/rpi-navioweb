@@ -12,36 +12,39 @@
     <script src="../static/imu.js"></script>
 </head>
 <body>
-    <h1>LED</h1>
-    <div>
-        <button id="startButton" onclick="runLed()" class="styled-button">
-            Start LED demo
-        </button>
-    </div>
     <div class="flex-row">
         <div>
-            <canvas id="colorPicker" class="color-picker" width="100" height="100"></canvas>
+            <div>
+                <button id="startButton" onclick="runLed()" class="styled-button">
+                    Start LED demo
+                </button>
+            </div>
+            <div class="flex-row">
+                <div>
+                    <canvas id="colorPicker" class="color-picker" width="100" height="100"></canvas>
+                </div>
+                <div>
+                    <input type="radio" id="off" name="mode" value="1" onchange="confLed()">
+                    <label for="off" class="label">OFF</label><br>
+                    <input type="radio" id="on" name="mode" value="2" onchange="confLed()" checked>
+                    <label for="on" class="label">ON</label><br>
+                    <input type="radio" id="pulse" name="mode" value="3" onchange="confLed()">
+                    <label for="pulse" class="label">Pulse</label>
+                </div>
+            </div>
+
+            <div id="output" class="label">
+                ...
+            </div>
         </div>
-        <div>
-            <input type="radio" id="off" name="mode" value="1" onchange="confLed()">
-            <label for="off" class="label">OFF</label><br>
-            <input type="radio" id="on" name="mode" value="2" onchange="confLed()" checked>
-            <label for="on" class="label">ON</label><br>
-            <input type="radio" id="pulse" name="mode" value="3" onchange="confLed()">
-            <label for="pulse" class="label">Pulse</label>
+
+        <div id="oscilloscope" class="scope-container">
+            <!--filled by oscilloscope.js-->
         </div>
-    </div>
 
-    <div id="output" class="label">
-        ...
-    </div>
-
-    <div id="oscilloscope" class="scope-container">
-        <!--filled by oscilloscope.js-->
-    </div>
-
-    <div id="imu" class="label">
-        <!--filled by imu.js-->
+        <div id="imu" class="label">
+            <!--filled by imu.js-->
+        </div>
     </div>
 
     <script src="../static/led.js"></script>

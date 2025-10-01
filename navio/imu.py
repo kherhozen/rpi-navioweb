@@ -1,32 +1,49 @@
 import time
-import sys
 import threading
 from navio.mpu9250 import MPU9250
+import numpy as np
+from ahrs.filters import Madgwick
+from ahrs.common.orientation import q_to_rpy # Pour convertir le quaternion en angles
 
 class IMUManager:
 
+    __SAMPLE_RATE = 100  # IMU reading rate
+    __DT = 1.0/__SAMPLE_RATE
+    __BETA = 0.04 
+
     def __init__(self):
+        
         self.imu = MPU9250()
         self.run = False
         self.t_update = None
         self.m9a = [0.0, 0.0, 0.0]
         self.m9g = [0.0, 0.0, 0.0]
         self.m9m = [0.0, 0.0, 0.0]
+        self.madgwick = Madgwick(
+            gyr=self.m9a,
+            acc=self.m9g,
+            mag=self.m9m,
+            frequency=self.__SAMPLE_RATE,
+            beta=self.__BETA
+        )
+        self.q = np.array([1.0, 0.0, 0.0, 0.0])
+        self.att = [0.0, 0.0, 0.0]
 
         if self.imu.testConnection():
-            print("Connection established: True")
             self.imu.initialize()
             time.sleep(1)
         else: 
-            print("Connection established: False")
+            print("Error: IMU Connection not established")
 
     def __update(self):
         while self.run:
             self.m9a, self.m9g, self.m9m = self.imu.getMotion9()
-            time.sleep(0.1)
+            self.q = self.madgwick.update(self.q, self.m9g, self.m9a, self.m9m)
+            self.att = np.degrees(q_to_rpy(self.q))
+            time.sleep(self.__DT)
 
     def get_data(self):
-        return (self.m9a, self.m9g, self.m9m)
+        return (self.m9a, self.m9g, self.m9m, self.att)
 
     def start(self):
         if not self.t_update:

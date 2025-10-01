@@ -3,7 +3,7 @@ class IMUDisp {
     constructor(imuId) {
         this.isRunning = false;
         this.imuId = imuId;
-        this.signalsList = ['ax', 'ay', 'az', 'gx', 'gy', 'gz', 'mx', 'my', 'mz'];
+        this.signalsList = ['ax', 'ay', 'az', 'gx', 'gy', 'gz', 'mx', 'my', 'mz', 'roll', 'pitch', 'yaw'];
         this.imuElement = document.getElementById(imuId);
         this.imuElement.innerHTML = `<div id="imu-matrix" class="matrix-container"></div>`
         this.signalsList.forEach((signal, signalIndex) => {
