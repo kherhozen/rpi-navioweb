@@ -20,9 +20,9 @@ class IMUManager:
         self.m9g = [0.0, 0.0, 0.0]
         self.m9m = [0.0, 0.0, 0.0]
         self.madgwick = Madgwick(
-            gyr=self.m9a,
-            acc=self.m9g,
-            mag=self.m9m,
+            gyr=np.array(self.m9a),
+            acc=np.array(self.m9g),
+            mag=np.array(self.m9m),
             frequency=self.__SAMPLE_RATE,
             beta=self.__BETA
         )
