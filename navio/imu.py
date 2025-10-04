@@ -2,12 +2,12 @@ import time
 import threading
 from navio.mpu9250 import MPU9250
 import numpy as np
-from ahrs.filters import Madgwick
+from ahrs.filters import Mahony
 from ahrs.common.orientation import q2rpy
 
 class IMUManager:
 
-    __SAMPLE_RATE = 100  # IMU reading rate
+    __SAMPLE_RATE = 100.0  # IMU reading rate
     __DT = 1.0/__SAMPLE_RATE
     __BETA = 0.1
 
@@ -19,12 +19,11 @@ class IMUManager:
         self.m9a = [0.0, 0.0, 0.0]
         self.m9g = [0.0, 0.0, 0.0]
         self.m9m = [0.0, 0.0, 0.0]
-        self.madgwick = Madgwick(
+        self.mahony = Mahony(
             gyr=np.array([self.m9a]),
             acc=np.array([self.m9g]),
             mag=np.array([self.m9m]),
-            frequency=self.__SAMPLE_RATE,
-            beta=self.__BETA
+            frequency=self.__SAMPLE_RATE
         )
         self.q = np.array([1.0, 0.0, 0.0, 0.0])
         self.att = [0.0, 0.0, 0.0]
@@ -38,7 +37,7 @@ class IMUManager:
     def __update(self):
         while self.run:
             self.m9a, self.m9g, self.m9m = self.imu.getMotion9()
-            self.q = self.madgwick.updateMARG(self.q, np.array(self.m9g), np.array(self.m9a), np.array(self.m9m))
+            self.q = self.mahony.updateMARG(self.q, np.array(self.m9g), np.array(self.m9a), np.array(self.m9m))
             self.att = q2rpy(self.q, in_deg=True)
             time.sleep(self.__DT)
 
