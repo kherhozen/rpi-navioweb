@@ -43,7 +43,7 @@ class IMUManager:
             dt = time.time()-self.t
             print(time.time()-self.t)
             self.t = time.time()
-            time.sleep(self.__DT-dt)
+            time.sleep(max(self.__DT-dt, 0))
 
     def get_data(self):
         return (self.m9a, self.m9g, self.m9m, self.att)
