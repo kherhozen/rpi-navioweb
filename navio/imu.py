@@ -41,7 +41,6 @@ class IMUManager:
             self.q = self.mahony.updateMARG(self.q, np.array(self.m9g), np.array(self.m9a), np.array(self.m9m))
             self.att = q2rpy(self.q, in_deg=True)
             dt = time.time()-self.t
-            print(time.time()-self.t)
             self.t = time.time()
             time.sleep(max(self.__DT-dt, 0))
 
