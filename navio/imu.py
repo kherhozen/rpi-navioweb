@@ -27,6 +27,7 @@ class IMUManager:
         )
         self.q = np.array([1.0, 0.0, 0.0, 0.0])
         self.att = [0.0, 0.0, 0.0]
+        self.t = time.time()
 
         if self.imu.testConnection():
             self.imu.initialize()
@@ -37,9 +38,9 @@ class IMUManager:
     def __update(self):
         while self.run:
             self.m9a, self.m9g, self.m9m = self.imu.getMotion9()
-            self.q = self.mahony.updateMARG(self.q, np.array(self.m9g), np.array(self.m9a), np.array(self.m9m))
+            self.q = self.mahony.updateMARG(self.q, np.array(self.m9g), np.array(self.m9a), np.array(self.m9m), time.time()-self.t)
+            self.t = time.time()
             self.att = q2rpy(self.q, in_deg=True)
-            print(self.att)
             time.sleep(self.__DT)
 
     def get_data(self):
