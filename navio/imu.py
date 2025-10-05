@@ -7,7 +7,7 @@ from ahrs.common.orientation import q2rpy
 
 class IMUManager:
 
-    __SAMPLE_RATE = 100.0  # IMU reading rate
+    __SAMPLE_RATE = 20.0  # IMU reading rate
     __DT = 1.0/__SAMPLE_RATE
     __BETA = 0.1
 
