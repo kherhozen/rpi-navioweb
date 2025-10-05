@@ -40,9 +40,10 @@ class IMUManager:
             self.m9a, self.m9g, self.m9m = self.imu.getMotion9()
             self.q = self.mahony.updateMARG(self.q, np.array(self.m9g), np.array(self.m9a), np.array(self.m9m))
             self.att = q2rpy(self.q, in_deg=True)
+            dt = time.time()-self.t
             print(time.time()-self.t)
             self.t = time.time()
-            time.sleep(self.__DT-(time.time()-self.t))
+            time.sleep(self.__DT-dt)
 
     def get_data(self):
         return (self.m9a, self.m9g, self.m9m, self.att)
